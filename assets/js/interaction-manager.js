@@ -1,3 +1,4 @@
+
 window.InteractionManager = {
 
   init() {
@@ -5,11 +6,6 @@ window.InteractionManager = {
     console.log(
       'InteractionManager INIT'
     )
-
-    this.camera =
-      document.querySelector(
-        '[camera]'
-      )
 
     this.scene =
       document.querySelector(
@@ -24,10 +20,6 @@ window.InteractionManager = {
 
     this.onTouchStart =
       this.onTouchStart.bind(this)
-
-    // ====================================
-    // WAIT FOR XR CANVAS
-    // ====================================
 
     this.scene.addEventListener(
 
@@ -51,10 +43,6 @@ window.InteractionManager = {
           'XR CANVAS READY'
         )
 
-        // ====================================
-        // TOUCH ONLY
-        // ====================================
-
         canvas.addEventListener(
 
           'touchstart',
@@ -76,7 +64,7 @@ window.InteractionManager = {
     event.preventDefault()
 
     // ====================================
-    // STATE CHECKS
+    // STATE
     // ====================================
 
     if (
@@ -91,8 +79,12 @@ window.InteractionManager = {
       !PuzzleManager.active
     ) return
 
+    if (
+      PuzzleManager.completed
+    ) return
+
     // ====================================
-    // TOUCH POSITION
+    // TOUCH
     // ====================================
 
     const touch =
@@ -105,14 +97,15 @@ window.InteractionManager = {
       -(touch.clientY / window.innerHeight) * 2 + 1
 
     // ====================================
-    // ACTIVE CAMERA
+    // CAMERA
     // ====================================
 
     const camera =
-     this.scene.camera 
-     
-     if (!camera) 
+      this.scene.camera
+
+    if (!camera)
       return
+
     // ====================================
     // RAYCAST
     // ====================================
@@ -137,10 +130,6 @@ window.InteractionManager = {
         true
       )
 
-    // ====================================
-    // NO HIT
-    // ====================================
-
     if (!intersects.length)
       return
 
@@ -152,10 +141,6 @@ window.InteractionManager = {
       intersects[0].object
 
     let knob = null
-
-    // ====================================
-    // FIND PARENT KNOB
-    // ====================================
 
     while (
       target &&
@@ -173,10 +158,6 @@ window.InteractionManager = {
       target =
         target.parent
     }
-
-    // ====================================
-    // INVALID
-    // ====================================
 
     if (!knob)
       return

@@ -2,6 +2,8 @@ window.IntroManager = {
 
   introStarted: false,
 
+  outroStarted: false,
+
   init() {
 
     console.log(
@@ -33,6 +35,10 @@ window.IntroManager = {
         '#lockerModel'
       )
 
+    // ====================================
+    // INTRO COMPLETE
+    // ====================================
+
     this.introVideo.addEventListener(
 
       'ended',
@@ -55,10 +61,6 @@ window.IntroManager = {
 
         APP.phase = 'locker'
 
-        // ====================================
-        // ACTIVATE PUZZLE
-        // ====================================
-
         PuzzleManager.activate()
 
         UIManager.showMessage(
@@ -66,9 +68,43 @@ window.IntroManager = {
         )
       }
     )
+
+    // ====================================
+    // OUTRO COMPLETE
+    // ====================================
+
+    this.outroVideo.addEventListener(
+
+      'ended',
+
+      () => {
+
+        UIManager.showMessage(
+          'Transmission Complete'
+        )
+
+        APP.phase = 'complete'
+
+        UIManager.log(
+          'EXPERIENCE COMPLETE'
+        )
+
+        // ====================================
+        // OPTIONAL REDIRECT LATER
+        // ====================================
+      }
+    )
   },
 
+  // ====================================
+  // TARGET FOUND
+  // ====================================
+
   onTargetFound() {
+
+    // ====================================
+    // INTRO
+    // ====================================
 
     if (
       APP.phase === 'intro'
@@ -93,6 +129,10 @@ window.IntroManager = {
       this.introVideo.play()
     }
 
+    // ====================================
+    // OUTRO
+    // ====================================
+
     if (
       APP.phase === 'outro'
     ) {
@@ -101,25 +141,64 @@ window.IntroManager = {
     }
   },
 
+  // ====================================
+  // TARGET LOST
+  // ====================================
+
   onTargetLost() {
 
-    this.introVideo.pause()
-    this.outroVideo.pause()
+    if (
+      APP.phase === 'intro'
+    ) {
+
+      this.introVideo.pause()
+    }
+
+    if (
+      APP.phase === 'outro'
+    ) {
+
+      this.outroVideo.pause()
+    }
   },
+
+  // ====================================
+  // PLAY OUTRO
+  // ====================================
 
   playOutro() {
 
+    if (
+      this.outroStarted
+    ) return
+
+    this.outroStarted = true
+
+    UIManager.log(
+      'PLAYING OUTRO'
+    )
+
     APP.phase = 'outro'
+
+    // ====================================
+    // HIDE LOCKER
+    // ====================================
 
     this.model.setAttribute(
       'visible',
       false
     )
 
+    // ====================================
+    // SHOW OUTRO
+    // ====================================
+
     this.outroPlane.setAttribute(
       'visible',
       true
     )
+
+    this.outroVideo.currentTime = 0
 
     this.outroVideo.play()
   }

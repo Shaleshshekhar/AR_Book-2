@@ -4,6 +4,8 @@ window.PuzzleManager = {
 
   active: false,
 
+  completed: false,
+
   rotationStep: 36,
 
   // ====================================
@@ -27,6 +29,8 @@ window.PuzzleManager = {
     )
 
     this.active = true
+
+    this.completed = false
 
     this.topSolved = false
 
@@ -185,15 +189,15 @@ window.PuzzleManager = {
 
   rotateKnob(id) {
 
+    if (
+      this.completed
+    ) return
+
     const knob =
       this.knobs[id]
 
     if (!knob)
       return
-
-    // ====================================
-    // LOCK SOLVED ROWS
-    // ====================================
 
     const knobNumber =
       parseInt(id)
@@ -203,6 +207,10 @@ window.PuzzleManager = {
 
     const isBottom =
       knobNumber >= 6
+
+    // ====================================
+    // LOCK SOLVED ROWS
+    // ====================================
 
     if (
       isTop &&
@@ -234,10 +242,6 @@ window.PuzzleManager = {
 
     knob.value =
       (knob.value + 1) % 10
-
-    // ====================================
-    // TARGET ROTATION
-    // ====================================
 
     knob.targetRotation =
       -knob.value *
@@ -272,10 +276,6 @@ window.PuzzleManager = {
     if (!knob.queue.length) {
 
       knob.rotating = false
-
-      // ====================================
-      // VALIDATE AFTER MOTION
-      // ====================================
 
       this.validatePuzzle()
 
@@ -467,9 +467,17 @@ window.PuzzleManager = {
     // ====================================
 
     if (
+      this.completed
+    ) return
+
+    if (
       this.topSolved &&
       this.bottomSolved
     ) {
+
+      this.completed = true
+
+      this.active = false
 
       UIManager.showMessage(
         'LOCKER UNLOCKED'
@@ -481,7 +489,15 @@ window.PuzzleManager = {
         'FULL PUZZLE SOLVED'
       )
 
-      // NEXT PHASE LATER
+      // ====================================
+      // TRANSITION
+      // ====================================
+
+      setTimeout(() => {
+
+        IntroManager.playOutro()
+
+      }, 1200)
     }
   }
 }
