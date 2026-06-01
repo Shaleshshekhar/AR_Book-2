@@ -115,6 +115,8 @@ window.InteractionManager = {
         true
       )
 
+    UIManager.log( `INTERSECTS: ${intersects.length}` )
+    
     if (!intersects.length)
       return
 
@@ -131,7 +133,7 @@ window.InteractionManager = {
 
     if (!knob) return
 
-    console.log(
+    UIManager.log(
       'ACTIVE KNOB:',
       knob.id
     )

@@ -9,31 +9,69 @@ window.UIManager = {
     console.log(
       'UIManager INIT'
     )
-
+        
+    this.debugPanel =
+      document.querySelector(
+        '#debugPanel'
+      )
+      
     this.element =
       document.querySelector(
         '#statusMessage'
       )
   },
+  
+    
+  log(text) {
 
-  showMessage(text, duration = 2500) {
+    console.log(text)
 
-    clearTimeout(this.timeout)
+    if (!this.debugPanel)
+      return
 
-    this.element.innerText =
-      text
+    const line =
+      document.createElement('div')
 
-    this.element.classList.add(
-      'visible'
+    line.innerText = text
+
+    this.debugPanel.appendChild(
+      line
     )
 
-    this.timeout =
-      setTimeout(() => {
+    // LIMIT LOGS
 
-        this.hideMessage()
+    while (
+      this.debugPanel.children
+        .length > 20
+    ) {
 
-      }, duration)
+      this.debugPanel.removeChild(
+        this.debugPanel.firstChild
+      )
+    }
+
+    this.debugPanel.scrollTop =
+      this.debugPanel.scrollHeight
   },
+
+    showMessage(text, duration = 2500) {
+
+      clearTimeout(this.timeout)
+
+      this.element.innerText =
+        text
+
+      this.element.classList.add(
+        'visible'
+      )
+
+      this.timeout =
+        setTimeout(() => {
+
+          this.hideMessage()
+
+        }, duration)
+    },
 
   hideMessage() {
 

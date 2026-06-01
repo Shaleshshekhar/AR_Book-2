@@ -54,6 +54,7 @@ window.PuzzleManager = {
 
     model.traverse(child => {
 
+    UIManager.log( `${child.name} : ${child.type}` )
       // ====================================
       // HIDE HIT MESHES
       // ====================================
@@ -67,7 +68,8 @@ window.PuzzleManager = {
         child.material.transparent =
           true
 
-        child.material.opacity = 0
+        child.material.opacity = 0.001
+        child.material.depthWrite = false
       }
 
       // ====================================
@@ -150,7 +152,7 @@ window.PuzzleManager = {
       knob.mesh.rotation.y =
         knob.currentRotation
 
-      console.log(
+      UIManager.log(
         `KNOB ${knob.id}: ${value}`
       )
     })
