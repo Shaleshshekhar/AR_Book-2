@@ -92,7 +92,17 @@ window.PuzzleManager = {
 
           rotating: false,
 
-          queue: []
+          queue: [],
+
+          baseRotationX:
+            child.rotation.x,
+
+          baseRotationY:
+            child.rotation.y,
+
+          baseRotationZ:
+            child.rotation.z
+
         }
 
         UIManager.log(
@@ -123,6 +133,10 @@ window.PuzzleManager = {
 
       knob.value = value
 
+      // ====================================
+      // ROTATION VALUE
+      // ====================================
+
       knob.currentRotation =
         -value *
         THREE.MathUtils.degToRad(
@@ -132,8 +146,20 @@ window.PuzzleManager = {
       knob.targetRotation =
         knob.currentRotation
 
-      knob.mesh.rotation.y =
-        knob.currentRotation
+      // ====================================
+      // APPLY ROTATION
+      // PRESERVE IMPORTED AXES
+      // ====================================
+
+      knob.mesh.rotation.set(
+
+        knob.baseRotationX,
+
+        knob.baseRotationY +
+          knob.currentRotation,
+
+        knob.baseRotationZ
+      )
 
       UIManager.log(
         `KNOB ${knob.id}: ${value}`
