@@ -1,15 +1,5 @@
 window.InteractionManager = {
 
-  activeKnob: null,
-
-  dragging: false,
-
-  startY: 0,
-
-  accumulatedDelta: 0,
-
-  threshold: 30,
-
   init() {
 
     console.log(
@@ -21,6 +11,11 @@ window.InteractionManager = {
         '[camera]'
       )
 
+    this.model =
+      document.querySelector(
+        '#lockerModel'
+      )
+
     this.raycaster =
       new THREE.Raycaster()
 
@@ -30,35 +25,11 @@ window.InteractionManager = {
     this.onTouchStart =
       this.onTouchStart.bind(this)
 
-    this.onTouchMove =
-      this.onTouchMove.bind(this)
-
-    this.onTouchEnd =
-      this.onTouchEnd.bind(this)
-
     window.addEventListener(
 
       'touchstart',
 
       this.onTouchStart,
-
-      { passive: false }
-    )
-
-    window.addEventListener(
-
-      'touchmove',
-
-      this.onTouchMove,
-
-      { passive: false }
-    )
-
-    window.addEventListener(
-
-      'touchend',
-
-      this.onTouchEnd,
 
       { passive: false }
     )
@@ -82,10 +53,6 @@ window.InteractionManager = {
       !PuzzleManager.active
     ) return
 
-    if (
-      this.dragging
-    ) return
-
     const touch =
       event.touches[0]
 
@@ -102,11 +69,15 @@ window.InteractionManager = {
       this.camera.object3D.children[0]
     )
 
+    // ====================================
+    // KNOB MESHES
+    // ====================================
+
     const meshes =
       Object.values(
         PuzzleManager.knobs
       ).map(
-        knob => knob.hitMesh
+        knob => knob.mesh
       )
 
     const intersects =
@@ -115,126 +86,44 @@ window.InteractionManager = {
         true
       )
 
-    UIManager.log( `INTERSECTS: ${intersects.length}` )
-    
+    UIManager.log(
+      `INTERSECTS: ${intersects.length}`
+    )
+
     if (!intersects.length)
       return
 
     const hit =
       intersects[0].object
 
+    UIManager.log(
+      `HIT: ${hit.name}`
+    )
+
     const knob =
       Object.values(
         PuzzleManager.knobs
       ).find(
         k =>
-          k.hitMesh === hit
+          k.mesh === hit
       )
 
-    if (!knob) return
+    if (!knob)
+      return
 
     UIManager.log(
-      'ACTIVE KNOB:',
-      knob.id
+      `ACTIVE KNOB: ${knob.id}`
     )
 
-    this.activeKnob =
-      knob
-
-    this.dragging = true
-
-    this.startY =
-      touch.clientY
-
-    this.accumulatedDelta = 0
-  },
-
-  // ====================================
-  // TOUCH MOVE
-  // ====================================
-
-  onTouchMove(event) {
-
-    if (
-      !this.dragging
-    ) return
-
-    event.preventDefault()
-
-    const touch =
-      event.touches[0]
-
-    const deltaY =
-      touch.clientY -
-      this.startY
-
-    this.accumulatedDelta +=
-      deltaY
-
-    this.startY =
-      touch.clientY
-
-    // ====================================
-    // MULTI STEP
-    // ====================================
-
-    while (
-      Math.abs(
-        this.accumulatedDelta
-      ) >= this.threshold
-    ) {
-
-      // SWIPE DOWN
-
-      if (
-        this.accumulatedDelta > 0
-      ) {
-
-        PuzzleManager.rotateKnob(
-          this.activeKnob.id,
-          1
-        )
-
-        this.accumulatedDelta -=
-          this.threshold
-      }
-
-      // SWIPE UP
-
-      else {
-
-        PuzzleManager.rotateKnob(
-          this.activeKnob.id,
-          -1
-        )
-
-        this.accumulatedDelta +=
-          this.threshold
-      }
-    }
-  },
-
-  // ====================================
-  // TOUCH END
-  // ====================================
-
-  onTouchEnd() {
-
-    this.dragging = false
-
-    this.activeKnob = null
-
-    this.accumulatedDelta = 0
+    PuzzleManager.rotateKnob(
+      knob.id
+    )
   },
 
   onTrackingLost() {
 
-    console.log(
+    UIManager.log(
       'INTERACTION SUSPENDED'
     )
-
-    this.dragging = false
-
-    this.activeKnob = null
   }
 }

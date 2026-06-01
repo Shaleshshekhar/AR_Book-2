@@ -12,6 +12,10 @@ window.PuzzleManager = {
       'PUZZLE ACTIVATED'
     )
 
+    UIManager.log(
+      'PUZZLE ACTIVATED'
+    )
+
     this.active = true
 
     this.setupKnobs()
@@ -27,7 +31,7 @@ window.PuzzleManager = {
   },
 
   // ====================================
-  // KNOB SETUP
+  // SETUP KNOBS
   // ====================================
 
   setupKnobs() {
@@ -41,36 +45,22 @@ window.PuzzleManager = {
 
     if (!model) {
 
-      console.log(
+      UIManager.log(
         'MODEL NOT READY'
       )
 
       return
     }
 
-    console.log(
+    UIManager.log(
       'SETTING UP KNOBS'
     )
 
     model.traverse(child => {
 
-    UIManager.log( `${child.name} : ${child.type}` )
-      // ====================================
-      // HIDE HIT MESHES
-      // ====================================
-
-      if (
-        child.material &&
-        child.material.name ===
-        'hitMesh_mat'
-      ) {
-
-        child.material.transparent =
-          true
-
-        child.material.opacity = 0.001
-        child.material.depthWrite = false
-      }
+      UIManager.log(
+        `${child.name}`
+      )
 
       // ====================================
       // REGISTER KNOBS
@@ -78,42 +68,35 @@ window.PuzzleManager = {
 
       if (
         child.name.startsWith(
-          'Hit_Code_'
+          'Code_'
         )
       ) {
 
         const id =
           child.name.replace(
-            'Hit_Code_',
+            'Code_',
             ''
-          )
-
-        const codeMesh =
-          model.getObjectByName(
-            `Code_${id}`
           )
 
         this.knobs[id] = {
 
           id,
 
+          mesh: child,
+
           value: 0,
-
-          hitMesh: child,
-
-          mesh: codeMesh,
-
-          targetRotation: 0,
 
           currentRotation: 0,
 
-          rotationQueue: [],
+          targetRotation: 0,
 
-          rotating: false
+          rotating: false,
+
+          queue: []
         }
 
-        console.log(
-          `KNOB REGISTERED ${id}`
+        UIManager.log(
+          `REGISTERED: ${id}`
         )
       }
     })
@@ -125,7 +108,7 @@ window.PuzzleManager = {
 
   randomizeKnobs() {
 
-    console.log(
+    UIManager.log(
       'RANDOMIZING KNOBS'
     )
 
@@ -149,7 +132,7 @@ window.PuzzleManager = {
       knob.targetRotation =
         knob.currentRotation
 
-      knob.mesh.rotation.y =
+      knob.mesh.rotation.x =
         knob.currentRotation
 
       UIManager.log(
@@ -162,23 +145,20 @@ window.PuzzleManager = {
   // ROTATE KNOB
   // ====================================
 
-  rotateKnob(id, direction) {
+  rotateKnob(id) {
 
     const knob =
       this.knobs[id]
 
-    if (!knob) return
+    if (!knob)
+      return
 
     // ====================================
-    // VALUE UPDATE
+    // VALUE
     // ====================================
 
     knob.value =
-      (
-        knob.value +
-        direction +
-        10
-      ) % 10
+      (knob.value + 1) % 10
 
     // ====================================
     // TARGET ROTATION
@@ -194,16 +174,15 @@ window.PuzzleManager = {
     // QUEUE
     // ====================================
 
-    knob.rotationQueue.push(
+    knob.queue.push(
       knob.targetRotation
     )
 
-    AudioManager.playTick()
-
-    console.log(
-      `KNOB ${id} VALUE:`,
-      knob.value
+    UIManager.log(
+      `KNOB ${id}: ${knob.value}`
     )
+
+    AudioManager.playTick()
 
     if (!knob.rotating) {
 
@@ -214,14 +193,12 @@ window.PuzzleManager = {
   },
 
   // ====================================
-  // PROCESS ROTATION QUEUE
+  // PROCESS QUEUE
   // ====================================
 
   processQueue(knob) {
 
-    if (
-      !knob.rotationQueue.length
-    ) {
+    if (!knob.queue.length) {
 
       knob.rotating = false
 
@@ -231,12 +208,12 @@ window.PuzzleManager = {
     knob.rotating = true
 
     const target =
-      knob.rotationQueue.shift()
+      knob.queue.shift()
 
     const start =
       knob.currentRotation
 
-    const duration = 100
+    const duration = 120
 
     const startTime =
       performance.now()
@@ -253,8 +230,6 @@ window.PuzzleManager = {
             1
           )
 
-        // EASE
-
         const eased =
           1 -
           Math.pow(
@@ -269,7 +244,7 @@ window.PuzzleManager = {
             eased
           )
 
-        knob.mesh.rotation.y =
+        knob.mesh.rotation.x =
           rotation
 
         knob.currentRotation =
@@ -283,10 +258,10 @@ window.PuzzleManager = {
 
         } else {
 
-          knob.currentRotation =
+          knob.mesh.rotation.x =
             target
 
-          knob.mesh.rotation.y =
+          knob.currentRotation =
             target
 
           this.processQueue(
@@ -295,8 +270,8 @@ window.PuzzleManager = {
         }
       }
 
-      requestAnimationFrame(
-        animate
-      )
+    requestAnimationFrame(
+      animate
+    )
   }
 }
