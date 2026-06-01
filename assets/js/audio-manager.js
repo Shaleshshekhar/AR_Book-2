@@ -105,5 +105,26 @@ window.AudioManager = {
     sound.volume = 1
 
     sound.play()
+  }, 
+  
+  playSolved() {
+
+    const sound =
+      this.sounds.solved.cloneNode()
+
+    sound.volume = 1
+
+    sound.play()
+  },
+
+  playUnlock() {
+
+    const sound =
+      this.sounds.unlock.cloneNode()
+
+    sound.volume = 1
+
+    sound.play()
   }
+
 }

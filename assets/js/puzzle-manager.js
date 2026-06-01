@@ -6,6 +6,20 @@ window.PuzzleManager = {
 
   rotationStep: 36,
 
+  // ====================================
+  // PASSWORDS
+  // ====================================
+
+  topPassword:
+    [1,1,2,3,5],
+
+  bottomPassword:
+    [8,1,3,2,1],
+
+  topSolved: false,
+
+  bottomSolved: false,
+
   activate() {
 
     UIManager.log(
@@ -13,6 +27,10 @@ window.PuzzleManager = {
     )
 
     this.active = true
+
+    this.topSolved = false
+
+    this.bottomSolved = false
 
     this.setupKnobs()
 
@@ -32,7 +50,6 @@ window.PuzzleManager = {
 
   setupKnobs() {
 
-    // RESET
     this.knobs = {}
 
     const model =
@@ -56,10 +73,6 @@ window.PuzzleManager = {
     )
 
     model.traverse(child => {
-
-      // ====================================
-      // REGISTER KNOBS
-      // ====================================
 
       if (
         child.name.startsWith(
@@ -115,36 +128,55 @@ window.PuzzleManager = {
       'RANDOMIZING KNOBS'
     )
 
-    Object.values(
-      this.knobs
-    ).forEach(knob => {
+    let valid = false
 
-      const value =
-        Math.floor(
-          Math.random() * 10
-        )
+    while (!valid) {
 
-      knob.value = value
+      Object.values(
+        this.knobs
+      ).forEach(knob => {
 
-      const rotation =
-        -value *
-        THREE.MathUtils.degToRad(
-          this.rotationStep
-        )
+        const value =
+          Math.floor(
+            Math.random() * 10
+          )
 
-      knob.currentRotation =
-        rotation
+        knob.value = value
 
-      knob.targetRotation =
-        rotation
+        const rotation =
+          -value *
+          THREE.MathUtils.degToRad(
+            this.rotationStep
+          )
 
-      knob.mesh.rotation.y =
-        rotation
+        knob.currentRotation =
+          rotation
 
-      UIManager.log(
-        `KNOB ${knob.id}: ${value}`
-      )
-    })
+        knob.targetRotation =
+          rotation
+
+        knob.mesh.rotation.y =
+          rotation
+      })
+
+      const topCorrect =
+        this.checkTopRow()
+
+      const bottomCorrect =
+        this.checkBottomRow()
+
+      if (
+        !topCorrect &&
+        !bottomCorrect
+      ) {
+
+        valid = true
+      }
+    }
+
+    UIManager.log(
+      'VALID START STATE'
+    )
   },
 
   // ====================================
@@ -158,6 +190,43 @@ window.PuzzleManager = {
 
     if (!knob)
       return
+
+    // ====================================
+    // LOCK SOLVED ROWS
+    // ====================================
+
+    const knobNumber =
+      parseInt(id)
+
+    const isTop =
+      knobNumber <= 5
+
+    const isBottom =
+      knobNumber >= 6
+
+    if (
+      isTop &&
+      this.topSolved
+    ) {
+
+      UIManager.log(
+        'TOP ROW LOCKED'
+      )
+
+      return
+    }
+
+    if (
+      isBottom &&
+      this.bottomSolved
+    ) {
+
+      UIManager.log(
+        'BOTTOM ROW LOCKED'
+      )
+
+      return
+    }
 
     // ====================================
     // VALUE UPDATE
@@ -176,10 +245,6 @@ window.PuzzleManager = {
         this.rotationStep
       )
 
-    // ====================================
-    // QUEUE
-    // ====================================
-
     knob.queue.push(
       knob.targetRotation
     )
@@ -189,10 +254,6 @@ window.PuzzleManager = {
     )
 
     AudioManager.playTick()
-
-    // ====================================
-    // START TWEEN
-    // ====================================
 
     if (!knob.rotating) {
 
@@ -208,13 +269,15 @@ window.PuzzleManager = {
 
   processQueue(knob) {
 
-    // ====================================
-    // END
-    // ====================================
-
     if (!knob.queue.length) {
 
       knob.rotating = false
+
+      // ====================================
+      // VALIDATE AFTER MOTION
+      // ====================================
+
+      this.validatePuzzle()
 
       return
     }
@@ -244,20 +307,12 @@ window.PuzzleManager = {
             1
           )
 
-        // ====================================
-        // EASE
-        // ====================================
-
         const eased =
           1 -
           Math.pow(
             1 - t,
             3
           )
-
-        // ====================================
-        // INTERPOLATE
-        // ====================================
 
         const rotation =
           THREE.MathUtils.lerp(
@@ -272,10 +327,6 @@ window.PuzzleManager = {
         knob.currentRotation =
           rotation
 
-        // ====================================
-        // CONTINUE
-        // ====================================
-
         if (t < 1) {
 
           requestAnimationFrame(
@@ -284,15 +335,11 @@ window.PuzzleManager = {
 
         } else {
 
-          // FINAL SNAP
-
           knob.mesh.rotation.y =
             target
 
           knob.currentRotation =
             target
-
-          // NEXT QUEUED ROTATION
 
           this.processQueue(
             knob
@@ -303,5 +350,138 @@ window.PuzzleManager = {
     requestAnimationFrame(
       animate
     )
+  },
+
+  // ====================================
+  // GET CURRENT ROWS
+  // ====================================
+
+  getTopRow() {
+
+    return [
+
+      this.knobs['01'].value,
+      this.knobs['02'].value,
+      this.knobs['03'].value,
+      this.knobs['04'].value,
+      this.knobs['05'].value
+    ]
+  },
+
+  getBottomRow() {
+
+    return [
+
+      this.knobs['06'].value,
+      this.knobs['07'].value,
+      this.knobs['08'].value,
+      this.knobs['09'].value,
+      this.knobs['10'].value
+    ]
+  },
+
+  // ====================================
+  // VALIDATION
+  // ====================================
+
+  arraysMatch(a, b) {
+
+    return a.every(
+      (value, index) =>
+        value === b[index]
+    )
+  },
+
+  checkTopRow() {
+
+    return this.arraysMatch(
+
+      this.getTopRow(),
+
+      this.topPassword
+    )
+  },
+
+  checkBottomRow() {
+
+    return this.arraysMatch(
+
+      this.getBottomRow(),
+
+      this.bottomPassword
+    )
+  },
+
+  // ====================================
+  // MAIN VALIDATION
+  // ====================================
+
+  validatePuzzle() {
+
+    // ====================================
+    // TOP
+    // ====================================
+
+    if (
+      !this.topSolved &&
+      this.checkTopRow()
+    ) {
+
+      this.topSolved = true
+
+      UIManager.showMessage(
+        'Lab Code Accepted'
+      )
+
+      AudioManager.playSolved()
+
+      UIManager.log(
+        'TOP SOLVED'
+      )
+    }
+
+    // ====================================
+    // BOTTOM
+    // ====================================
+
+    if (
+      !this.bottomSolved &&
+      this.checkBottomRow()
+    ) {
+
+      this.bottomSolved = true
+
+      UIManager.showMessage(
+        'Security Override Accepted'
+      )
+
+      AudioManager.playSolved()
+
+      UIManager.log(
+        'BOTTOM SOLVED'
+      )
+    }
+
+    // ====================================
+    // FULL PUZZLE
+    // ====================================
+
+    if (
+      this.topSolved &&
+      this.bottomSolved
+    ) {
+
+      UIManager.showMessage(
+        'LOCKER UNLOCKED'
+      )
+
+      AudioManager.playUnlock()
+
+      UIManager.log(
+        'FULL PUZZLE SOLVED'
+      )
+
+      // NEXT PHASE LATER
+    }
   }
 }
