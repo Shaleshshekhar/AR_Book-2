@@ -87,12 +87,16 @@ window.InteractionManager = {
   // ====================================
   // TOUCH START
   // ====================================
-
+    
   onTouchStart(event) {
 
     UIManager.log(
-      'TOUCH START'
+      'SCREEN TOUCHED'
     )
+
+    // ====================================
+    // BASIC STATE CHECK
+    // ====================================
 
     UIManager.log(
       `PHASE: ${APP.phase}`
@@ -107,164 +111,29 @@ window.InteractionManager = {
     )
 
     // ====================================
-    // PHASE CHECK
+    // FORCE TEST
     // ====================================
 
-    if (
-      APP.phase !== 'locker'
-    ) {
-
-      UIManager.log(
-        'BLOCKED: NOT LOCKER PHASE'
-      )
-
-      return
-    }
-
-    // ====================================
-    // TRACKING CHECK
-    // ====================================
-
-    if (
-      !APP.tracking
-    ) {
-
-      UIManager.log(
-        'BLOCKED: TRACKING FALSE'
-      )
-
-      return
-    }
-
-    // ====================================
-    // PUZZLE CHECK
-    // ====================================
-
-    if (
-      !PuzzleManager.active
-    ) {
-
-      UIManager.log(
-        'BLOCKED: PUZZLE INACTIVE'
-      )
-
-      return
-    }
-
-    UIManager.log(
-      'INTERACTION ALLOWED'
-    )
-
-    const touch =
-      event.touches[0]
-
-    this.mouse.x =
-      (touch.clientX / window.innerWidth) * 2 - 1
-
-    this.mouse.y =
-      -(touch.clientY / window.innerHeight) * 2 + 1
-
-    // ====================================
-    // CAMERA CHECK
-    // ====================================
-
-    UIManager.log(
-      `CAMERA EXISTS: ${
-        !!this.camera
-      }`
-    )
-
-    UIManager.log(
-      `CAMERA CHILDREN: ${
-        this.camera.object3D.children.length
-      }`
-    )
-
-    this.raycaster.setFromCamera(
-
-      this.mouse,
-
-      this.camera.object3D.children[0]
-    )
-
-    // ====================================
-    // MESHES
-    // ====================================
-
-    const meshes =
+    const firstKnob =
       Object.values(
         PuzzleManager.knobs
-      ).map(
-        knob => knob.mesh
-      )
+      )[0]
 
-    UIManager.log(
-      `KNOB COUNT: ${meshes.length}`
-    )
-
-    const intersects =
-      this.raycaster.intersectObjects(
-        meshes,
-        true
-      )
-
-    UIManager.log(
-      `INTERSECTS: ${intersects.length}`
-    )
-
-    if (!intersects.length) {
+    if (!firstKnob) {
 
       UIManager.log(
-        'NO INTERSECTION'
-      )
-
-      return
-    }
-
-    const hit =
-      intersects[0].object
-
-    UIManager.log(
-      `HIT: ${hit.name}`
-    )
-
-    let targetObject =
-      hit
-
-    let knob = null
-
-    while (
-      targetObject &&
-      !knob
-    ) {
-
-      knob =
-        Object.values(
-          PuzzleManager.knobs
-        ).find(
-          k =>
-            k.mesh === targetObject
-        )
-
-      targetObject =
-        targetObject.parent
-    }
-
-    if (!knob) {
-
-      UIManager.log(
-        'NO KNOB FOUND'
+        'NO KNOBS FOUND'
       )
 
       return
     }
 
     UIManager.log(
-      `ROTATING: ${knob.id}`
+      `FORCE ROTATING: ${firstKnob.id}`
     )
 
     PuzzleManager.rotateKnob(
-      knob.id
+      firstKnob.id
     )
   },
 
