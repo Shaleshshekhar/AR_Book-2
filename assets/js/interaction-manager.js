@@ -16,6 +16,11 @@ window.InteractionManager = {
         '#lockerModel'
       )
 
+    this.scene =
+      document.querySelector(
+        'a-scene'
+      )
+
     this.raycaster =
       new THREE.Raycaster()
 
@@ -25,15 +30,59 @@ window.InteractionManager = {
     this.onTouchStart =
       this.onTouchStart.bind(this)
 
-    window.addEventListener(
+    // ====================================
+    // WAIT FOR SCENE RENDER
+    // ====================================
 
-      'touchstart',
+    this.scene.addEventListener(
 
-      this.onTouchStart,
+      'renderstart',
 
-      { passive: false }
+      () => {
+
+        UIManager.log(
+          'RENDER START'
+        )
+
+        const canvas =
+          this.scene.canvas
+
+        if (!canvas) {
+
+          UIManager.log(
+            'NO CANVAS'
+          )
+
+          return
+        }
+
+        UIManager.log(
+          'CANVAS READY'
+        )
+
+        canvas.addEventListener(
+
+          'touchstart',
+
+          this.onTouchStart,
+
+          { passive: false }
+        )
+
+        canvas.addEventListener(
+
+          'click',
+
+          this.onTouchStart
+        )
+
+        UIManager.log(
+          'TOUCH EVENTS ATTACHED'
+        )
+      }
     )
   },
+
 
   // ====================================
   // TOUCH START
