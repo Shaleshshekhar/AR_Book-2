@@ -41,17 +41,70 @@ window.InteractionManager = {
 
   onTouchStart(event) {
 
+    UIManager.log(
+      'TOUCH START'
+    )
+
+    UIManager.log(
+      `PHASE: ${APP.phase}`
+    )
+
+    UIManager.log(
+      `TRACKING: ${APP.tracking}`
+    )
+
+    UIManager.log(
+      `PUZZLE ACTIVE: ${PuzzleManager.active}`
+    )
+
+    // ====================================
+    // PHASE CHECK
+    // ====================================
+
     if (
       APP.phase !== 'locker'
-    ) return
+    ) {
+
+      UIManager.log(
+        'BLOCKED: NOT LOCKER PHASE'
+      )
+
+      return
+    }
+
+    // ====================================
+    // TRACKING CHECK
+    // ====================================
 
     if (
       !APP.tracking
-    ) return
+    ) {
+
+      UIManager.log(
+        'BLOCKED: TRACKING FALSE'
+      )
+
+      return
+    }
+
+    // ====================================
+    // PUZZLE CHECK
+    // ====================================
 
     if (
       !PuzzleManager.active
-    ) return
+    ) {
+
+      UIManager.log(
+        'BLOCKED: PUZZLE INACTIVE'
+      )
+
+      return
+    }
+
+    UIManager.log(
+      'INTERACTION ALLOWED'
+    )
 
     const touch =
       event.touches[0]
@@ -62,6 +115,22 @@ window.InteractionManager = {
     this.mouse.y =
       -(touch.clientY / window.innerHeight) * 2 + 1
 
+    // ====================================
+    // CAMERA CHECK
+    // ====================================
+
+    UIManager.log(
+      `CAMERA EXISTS: ${
+        !!this.camera
+      }`
+    )
+
+    UIManager.log(
+      `CAMERA CHILDREN: ${
+        this.camera.object3D.children.length
+      }`
+    )
+
     this.raycaster.setFromCamera(
 
       this.mouse,
@@ -70,7 +139,7 @@ window.InteractionManager = {
     )
 
     // ====================================
-    // KNOB MESHES
+    // MESHES
     // ====================================
 
     const meshes =
@@ -79,6 +148,10 @@ window.InteractionManager = {
       ).map(
         knob => knob.mesh
       )
+
+    UIManager.log(
+      `KNOB COUNT: ${meshes.length}`
+    )
 
     const intersects =
       this.raycaster.intersectObjects(
@@ -90,8 +163,14 @@ window.InteractionManager = {
       `INTERSECTS: ${intersects.length}`
     )
 
-    if (!intersects.length)
+    if (!intersects.length) {
+
+      UIManager.log(
+        'NO INTERSECTION'
+      )
+
       return
+    }
 
     const hit =
       intersects[0].object
@@ -108,11 +187,17 @@ window.InteractionManager = {
           k.mesh === hit
       )
 
-    if (!knob)
+    if (!knob) {
+
+      UIManager.log(
+        'KNOB NOT FOUND'
+      )
+
       return
+    }
 
     UIManager.log(
-      `ACTIVE KNOB: ${knob.id}`
+      `ROTATING: ${knob.id}`
     )
 
     PuzzleManager.rotateKnob(
