@@ -9,57 +9,98 @@ window.APP = {
   phase: 'splash'
 }
 
-window.addEventListener(
+// ====================================
+// INIT MANAGERS
+// ====================================
 
-  'DOMContentLoaded',
+console.log(
+  'INITIALIZING MANAGERS'
+)
 
-  () => {
+AudioManager.init()
+UIManager.init()
+TrackingManager.init()
+IntroManager.init()
+InteractionManager.init()
+PuzzleManager.init()
+
+// ====================================
+// SPLASH REFERENCES
+// ====================================
+
+const splashScreen =
+  document.querySelector(
+    '#splashScreen'
+  )
+
+const startButton =
+  document.querySelector(
+    '#startButton'
+  )
+
+console.log(
+  'SPLASH REFERENCES:',
+  splashScreen,
+  startButton
+)
+
+// ====================================
+// START BUTTON
+// ====================================
+
+startButton.addEventListener(
+
+  'click',
+
+  async () => {
 
     console.log(
-      'DOM READY'
+      'START BUTTON CLICKED'
     )
 
-    AudioManager.init()
-    UIManager.init()
-    TrackingManager.init()
-    IntroManager.init()
-    InteractionManager.init()
-    PuzzleManager.init()
+    if (APP.started) {
 
-    const splashScreen =
-      document.querySelector(
-        '#splashScreen'
+      console.log(
+        'APP ALREADY STARTED'
       )
 
-    const startButton =
-      document.querySelector(
-        '#startButton'
-      )
+      return
+    }
 
-    startButton.addEventListener(
+    APP.started = true
 
-      'click',
+    startButton.innerText =
+      'LOADING...'
 
-      async () => {
+    startButton.disabled = true
 
-        if (APP.started) return
+    // ====================================
+    // AUDIO UNLOCK
+    // ====================================
 
-        APP.started = true
+    await AudioManager.unlock()
 
-        startButton.innerText =
-          'LOADING...'
+    console.log(
+      'AUDIO READY'
+    )
 
-        startButton.disabled = true
+    // ====================================
+    // HIDE SPLASH
+    // ====================================
 
-        await AudioManager.unlock()
+    splashScreen.style.display =
+      'none'
 
-        splashScreen.style.display =
-          'none'
+    console.log(
+      'SPLASH HIDDEN'
+    )
 
-        UIManager.showMessage(
-          'Scan the book'
-        )
-      }
+    // ====================================
+    // STATUS MESSAGE
+    // ====================================
+
+    UIManager.showMessage(
+      'Scan the book'
     )
   }
 )
