@@ -1,33 +1,40 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR BOOK</title>
+  <title>AR MODEL TEST</title>
 
   <!-- 8th Wall -->
   <script src="https://cdn.8thwall.com/web/aframe/8frame-1.3.0.min.js"></script>
   <script src="https://cdn.8thwall.com/web/xrextras/xrextras.js"></script>
 
   <!-- XR Engine -->
-  <script async src="./engine/xr.js" data-preload-chunks="slam"></script>
+  <script async src="../engine/xr.js" data-preload-chunks="slam"></script>
 
-  <!-- Image Target -->
+  <!-- IMAGE TARGET -->
+
   <script>
+
     const onxrloaded = () => {
+
+      console.log('XR LOADED')
 
       XR8.XrController.configure({
 
-        imageTargetData: [{
+        imageTargetData:[{
 
           name: 'book',
+
           type: 'PLANAR',
 
-          imagePath: '../assets/Targets/ghost_book_luminance.jpg',
+          imagePath: '/assets/targets/ghost_book_luminance.jpg',
 
           properties: {
 
             top: 184,
             left: 0,
+
             width: 2083,
             height: 2777,
 
@@ -38,28 +45,295 @@
           }
         }]
       })
+
+      console.log('IMAGE TARGET CONFIGURED')
     }
 
     window.XR8
       ? onxrloaded()
-      : window.addEventListener('xrloaded', onxrloaded)
+      : window.addEventListener(
+          'xrloaded',
+          onxrloaded
+        )
+
   </script>
 
-  <!-- Puzzle Logic -->
-  <script src="./locker-puzzle.js"></script>
+  <!-- SIMPLE FLOW -->
+
+  <script>
+
+    AFRAME.registerComponent(
+      'simple-ar-flow',
+
+      {
+
+        // ====================================
+        // TOUCH RAYCAST
+        // ====================================
+
+        onTouch(event) {
+
+          console.log('TOUCH DETECTED')
+
+          if (!this.modelVisible) {
+
+            console.log(
+              'MODEL NOT VISIBLE'
+            )
+
+            return
+          }
+
+          const touch =
+            event.touches[0]
+
+          this.mouse.x =
+            (touch.clientX / window.innerWidth) * 2 - 1
+
+          this.mouse.y =
+            -(touch.clientY / window.innerHeight) * 2 + 1
+
+          console.log(
+            'NORMALIZED TOUCH:',
+            this.mouse
+          )
+
+          this.raycaster.setFromCamera(
+
+            this.mouse,
+
+            this.camera.object3D.children[0]
+          )
+
+          const modelMesh =
+            this.model.getObject3D('mesh')
+
+          if (!modelMesh) {
+
+            console.log(
+              'NO MODEL MESH'
+            )
+
+            return
+          }
+
+          const intersects =
+            this.raycaster.intersectObject(
+              modelMesh,
+              true
+            )
+
+          console.log(
+            'INTERSECTIONS:',
+            intersects
+          )
+
+          if (!intersects.length) {
+
+            console.log(
+              'NO MODEL HIT'
+            )
+
+            return
+          }
+
+          console.log('MODEL TOUCHED')
+
+          // HIDE MODEL
+
+          this.model.setAttribute(
+            'visible',
+            false
+          )
+
+          this.modelVisible = false
+
+          // SHOW OUTRO
+
+          this.outroPlane.setAttribute(
+            'visible',
+            true
+          )
+
+          this.outroVideo.play()
+
+          console.log(
+            'OUTRO STARTED'
+          )
+        },
+
+        // ====================================
+        // INIT
+        // ====================================
+
+        init: function () {
+
+          console.log(
+            'FLOW COMPONENT INIT'
+          )
+
+          this.introVideo =
+            document.querySelector(
+              '#introVideo'
+            )
+
+          this.outroVideo =
+            document.querySelector(
+              '#outroVideo'
+            )
+
+          this.introPlane =
+            document.querySelector(
+              '#introPlane'
+            )
+
+          this.outroPlane =
+            document.querySelector(
+              '#outroPlane'
+            )
+
+          this.model =
+            document.querySelector(
+              '#lockerModel'
+            )
+
+          this.started = false
+
+          // ====================================
+          // RAYCAST SETUP
+          // ====================================
+
+          this.camera =
+            document.querySelector('[camera]')
+
+          this.raycaster =
+            new THREE.Raycaster()
+
+          this.mouse =
+            new THREE.Vector2()
+
+          this.modelVisible = false
+
+          this.onTouch =
+            this.onTouch.bind(this)
+
+          window.addEventListener(
+            'touchstart',
+            this.onTouch,
+            { passive: false }
+          )
+
+          console.log(
+            'RAYCAST TOUCH READY'
+          )
+
+          // ====================================
+          // TARGET FOUND
+          // ====================================
+
+          this.onFound = () => {
+
+            console.log('===================')
+            console.log('TARGET FOUND')
+            console.log('===================')
+
+            if (this.started) return
+
+            this.started = true
+
+            this.introPlane.setAttribute(
+              'visible',
+              true
+            )
+
+            this.introVideo.play()
+
+            console.log(
+              'INTRO VIDEO STARTED'
+            )
+          }
+
+          // ====================================
+          // TARGET LOST
+          // ====================================
+
+          this.onLost = () => {
+
+            console.log('===================')
+            console.log('TARGET LOST')
+            console.log('===================')
+
+            this.introVideo.pause()
+
+            this.outroVideo.pause()
+          }
+
+          // ====================================
+          // INTRO ENDED
+          // ====================================
+
+          this.introVideo.addEventListener(
+            'ended',
+
+            () => {
+
+              console.log(
+                'INTRO VIDEO ENDED'
+              )
+
+              this.introPlane.setAttribute(
+                'visible',
+                false
+              )
+
+              this.model.setAttribute(
+                'visible',
+                true
+              )
+
+              this.modelVisible = true
+
+              console.log(
+                'MODEL SHOWN'
+              )
+            }
+          )
+
+          // ====================================
+          // XR EVENTS
+          // ====================================
+
+          this.el.sceneEl.addEventListener(
+            'xrimagefound',
+            this.onFound
+          )
+
+          this.el.sceneEl.addEventListener(
+            'xrimagelost',
+            this.onLost
+          )
+
+          console.log(
+            'XR EVENTS REGISTERED'
+          )
+        }
+      }
+    )
+
+  </script>
+
+  <!-- STYLES -->
 
   <style>
 
     body {
+
       margin: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
       background: black;
-    }
 
-    /* ========================================= */
-    /* SPLASH SCREEN */
-    /* ========================================= */
+      font-family: Arial, sans-serif;
+    }
 
     #splashScreen {
 
@@ -75,76 +349,25 @@
       align-items: center;
 
       color: white;
-
-      pointer-events: auto;
     }
 
     #splashContent {
+
       text-align: center;
-      padding: 30px;
-      width: 100%;
-    }
-
-    #splashTitle {
-      font-size: 42px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      letter-spacing: 4px;
-    }
-
-    #splashSubtitle {
-      font-size: 18px;
-      opacity: 0.8;
-      margin-bottom: 40px;
     }
 
     #startButton {
 
-      pointer-events: auto;
+      margin-top: 20px;
+
+      padding: 16px 30px;
 
       border: none;
-      outline: none;
-
-      padding: 18px 34px;
-
-      font-size: 18px;
-      border-radius: 12px;
-
-      background: white;
-      color: black;
-
-      cursor: pointer;
-
-      position: relative;
-      z-index: 999999;
-    }
-
-    /* ========================================= */
-    /* STATUS TEXT */
-    /* ========================================= */
-
-    #statusText {
-
-      position: fixed;
-
-      top: 30px;
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      z-index: 9999;
-
-      color: white;
-
-      background: rgba(0,0,0,0.75);
-
-      padding: 12px 20px;
-
       border-radius: 10px;
 
       font-size: 18px;
 
-      display: none;
+      cursor: pointer;
     }
 
   </style>
@@ -152,41 +375,27 @@
 
 <body>
 
-  <!-- ========================================= -->
-  <!-- SPLASH SCREEN -->
-  <!-- ========================================= -->
+  <!-- SPLASH -->
 
   <div id="splashScreen">
 
     <div id="splashContent">
 
-      <div id="splashTitle">
-        ORION
-      </div>
+      <h1>ORION</h1>
 
-      <div id="splashSubtitle">
-        Scan the book to begin the experience
-      </div>
+      <p>Scan the book to begin</p>
 
       <button id="startButton">
+
         START EXPERIENCE
+
       </button>
 
     </div>
 
   </div>
 
-  <!-- ========================================= -->
-  <!-- STATUS -->
-  <!-- ========================================= -->
-
-  <div id="statusText">
-    Puzzle Solved
-  </div>
-
-  <!-- ========================================= -->
   <!-- SCENE -->
-  <!-- ========================================= -->
 
   <a-scene
 
@@ -197,9 +406,7 @@
 
     xrweb="disableWorldTracking: true">
 
-    <!-- ========================================= -->
     <!-- ASSETS -->
-    <!-- ========================================= -->
 
     <a-assets>
 
@@ -207,11 +414,16 @@
 
       <video
         id="introVideo"
-        src="assets/intro_video.mp4"
+
+        src="/assets/intro_video.mp4"
+
         preload="auto"
-        webkit-playsinline
+
         playsinline
+        webkit-playsinline
+
         crossorigin="anonymous"
+
         muted>
       </video>
 
@@ -219,19 +431,26 @@
 
       <video
         id="outroVideo"
-        src="assets/outro_video.mp4"
+
+        src="/assets/outro_video.mp4"
+
         preload="auto"
-        webkit-playsinline
+
         playsinline
+        webkit-playsinline
+
         crossorigin="anonymous"
+
         muted>
       </video>
 
-      <!-- LOCKER MODEL -->
+      <!-- MODEL -->
 
       <a-asset-item
-        id="lockerModel"
-        src="assets/locker.glb">
+
+        id="lockerAsset"
+
+        src="/assets/locker.glb">
       </a-asset-item>
 
     </a-assets>
@@ -240,11 +459,13 @@
 
     <a-camera position="0 4 10"></a-camera>
 
-    <!-- ========================================= -->
     <!-- IMAGE TARGET -->
-    <!-- ========================================= -->
 
-    <xrextras-named-image-target name="book">
+    <xrextras-named-image-target
+
+      name="book"
+
+      simple-ar-flow>
 
       <!-- INTRO VIDEO -->
 
@@ -262,21 +483,20 @@
         visible="false">
       </a-video>
 
-      <!-- LOCKER -->
+      <!-- MODEL -->
 
       <a-entity
 
-        id="lockerRoot"
+        id="lockerModel"
 
-        gltf-model="#lockerModel"
+        gltf-model="#lockerAsset"
 
-        position="0 0 -0.3"
+        position="0 -0.4 0"
 
-        scale="0.825 0.825 0.825"
+        scale="0.3 0.3 0.3"
 
-        visible="false"
+        visible="false">
 
-        locker-puzzle>
       </a-entity>
 
       <!-- OUTRO VIDEO -->
@@ -299,432 +519,69 @@
 
   </a-scene>
 
-  <!-- ========================================= -->
-  <!-- MAIN EXPERIENCE SCRIPT -->
-  <!-- ========================================= -->
+  <!-- SPLASH LOGIC -->
 
   <script>
 
-  console.log('==============================')
-  console.log('APP SCRIPT STARTED')
-  console.log('==============================')
-
-  // =========================================
-  // ELEMENT REFERENCES
-  // =========================================
-
-  const splashScreen =
-    document.querySelector('#splashScreen')
-
-  const startButton =
-    document.querySelector('#startButton')
-
-  const introVideo =
-    document.querySelector('#introVideo')
-
-  const outroVideo =
-    document.querySelector('#outroVideo')
-
-  const introPlane =
-    document.querySelector('#introPlane')
-
-  const outroPlane =
-    document.querySelector('#outroPlane')
-
-  const lockerRoot =
-    document.querySelector('#lockerRoot')
-
-  const statusText =
-    document.querySelector('#statusText')
-
-  const imageTarget =
-    document.querySelector('xrextras-named-image-target')
-
-  console.log('ELEMENT REFERENCES COMPLETE')
-
-  console.log('splashScreen:', splashScreen)
-  console.log('startButton:', startButton)
-  console.log('introVideo:', introVideo)
-  console.log('outroVideo:', outroVideo)
-  console.log('imageTarget:', imageTarget)
-
-  // =========================================
-  // GLOBAL STATE
-  // =========================================
-
-  let experienceStarted = false
-
-  let introCompleted = false
-  let outroStarted = false
-
-  window.puzzleTrackingActive = false
-
-  console.log('INITIAL STATE READY')
-
-  // =========================================
-  // STATUS MESSAGE
-  // =========================================
-
-  function showMessage(text) {
-
-    console.log('SHOW MESSAGE:', text)
-
-    statusText.innerText = text
-
-    statusText.style.display = 'block'
-
-    setTimeout(() => {
-
-      statusText.style.display = 'none'
-
-      console.log('MESSAGE HIDDEN')
-
-    }, 2500)
-  }
-
-  // =========================================
-  // DEBUG TOUCHES
-  // =========================================
-
-  document.body.addEventListener('touchstart', () => {
-
-    console.log('BODY TOUCH DETECTED')
-
-  })
-
-  document.body.addEventListener('click', () => {
-
-    console.log('BODY CLICK DETECTED')
-
-  })
-
-  // =========================================
-  // START EXPERIENCE
-  // =========================================
-
-  const unlockExperience = async (event) => {
-
-    console.log('==============================')
-    console.log('unlockExperience CALLED')
-    console.log('==============================')
-
-    console.log('EVENT:', event)
-
-    if (experienceStarted) {
-
-      console.log('BLOCKED: experience already started')
-
-      return
-    }
-
-    experienceStarted = true
-
-    console.log('experienceStarted = TRUE')
-
-    startButton.innerText = 'LOADING...'
-
-    console.log('BUTTON TEXT CHANGED')
-
-    try {
-
-      console.log('ATTEMPTING MEDIA UNLOCK')
-
-      introVideo.muted = false
-      outroVideo.muted = false
-
-      console.log('VIDEOS UNMUTED')
-
-      await introVideo.play()
-
-      console.log('INTRO VIDEO PLAY SUCCESS')
-
-      introVideo.pause()
-
-      console.log('INTRO VIDEO PAUSED')
-
-      introVideo.currentTime = 0
-
-      console.log('INTRO VIDEO RESET')
-
-    } catch (e) {
-
-      console.log('MEDIA UNLOCK ERROR:')
-      console.error(e)
-    }
-
-    console.log('ATTEMPTING TO HIDE SPLASH')
-
-    splashScreen.style.display = 'none'
-
-    console.log('SPLASH DISPLAY SET TO NONE')
-
-    console.log(
-      'CURRENT DISPLAY VALUE:',
-      splashScreen.style.display
-    )
-
-    window.puzzleTrackingActive = true
-
-    console.log('PUZZLE TRACKING ENABLED')
-
-    console.log('==============================')
-    console.log('unlockExperience COMPLETE')
-    console.log('==============================')
-  }
-
-  // =========================================
-  // BUTTON EVENTS
-  // =========================================
-
-  console.log('REGISTERING BUTTON EVENTS')
-
-  startButton.addEventListener('click', (e) => {
-
-    console.log('BUTTON CLICK EVENT FIRED')
-
-    unlockExperience(e)
-  })
-
-  startButton.addEventListener('touchstart', (e) => {
-
-    console.log('BUTTON TOUCHSTART EVENT FIRED')
-
-    unlockExperience(e)
-  })
-
-  console.log('BUTTON EVENTS REGISTERED')
-
-  // =========================================
-  // TARGET FOUND
-  // =========================================
-
-  imageTarget.addEventListener('targetFound', () => {
-
-    console.log('==============================')
-    console.log('TARGET FOUND')
-    console.log('==============================')
-
-    console.log(
-      'experienceStarted:',
-      experienceStarted
-    )
-
-    if (!experienceStarted) {
-
-      console.log('TARGET FOUND BLOCKED')
-
-      return
-    }
-
-    window.puzzleTrackingActive = true
-
-    console.log('TRACKING ENABLED')
-
-    // INTRO
-    if (!introCompleted) {
-
-      console.log('STARTING INTRO VIDEO')
-
-      introPlane.setAttribute(
-        'visible',
-        true
+    console.log('APP START')
+
+    const splashScreen =
+      document.querySelector(
+        '#splashScreen'
       )
 
-      introVideo.play()
-        .then(() => {
-
-          console.log('INTRO VIDEO PLAYING')
-        })
-        .catch((err) => {
-
-          console.log('INTRO VIDEO PLAY FAILED')
-          console.error(err)
-        })
-    }
-
-    // OUTRO
-    if (
-      introCompleted &&
-      outroStarted
-    ) {
-
-      console.log('RESUMING OUTRO VIDEO')
-
-      outroVideo.play()
-        .then(() => {
-
-          console.log('OUTRO VIDEO RESUMED')
-        })
-        .catch((err) => {
-
-          console.log('OUTRO VIDEO RESUME FAILED')
-          console.error(err)
-        })
-    }
-  })
-
-  // =========================================
-  // TARGET LOST
-  // =========================================
-
-  imageTarget.addEventListener('targetLost', () => {
-
-    console.log('==============================')
-    console.log('TARGET LOST')
-    console.log('==============================')
-
-    introVideo.pause()
-
-    outroVideo.pause()
-
-    console.log('VIDEOS PAUSED')
-
-    window.puzzleTrackingActive = false
-
-    console.log('TRACKING DISABLED')
-  })
-
-  // =========================================
-  // INTRO ENDED
-  // =========================================
-
-  introVideo.addEventListener('ended', () => {
-
-    console.log('==============================')
-    console.log('INTRO VIDEO ENDED')
-    console.log('==============================')
-
-    introCompleted = true
-
-    console.log('introCompleted = TRUE')
-
-    introPlane.setAttribute(
-      'visible',
-      false
-    )
-
-    console.log('INTRO PLANE HIDDEN')
-
-    lockerRoot.setAttribute(
-      'visible',
-      true
-    )
-
-    console.log('LOCKER SHOWN')
-  })
-
-  // =========================================
-  // ROW SOLVED
-  // =========================================
-
-  window.onPuzzleSolved = (type) => {
-
-    console.log('ROW SOLVED:', type)
-
-    if (type === 'top') {
-
-      showMessage(
-        'Dr. Ringuet Code Solved'
+    const startButton =
+      document.querySelector(
+        '#startButton'
       )
-    }
 
-    if (type === 'bottom') {
-
-      showMessage(
-        'Saran Security Code Solved'
+    const introVideo =
+      document.querySelector(
+        '#introVideo'
       )
-    }
-  }
 
-  // =========================================
-  // ALL SOLVED
-  // =========================================
+    startButton.addEventListener(
 
-  window.onAllPuzzleSolved = () => {
+      'click',
 
-    console.log('==============================')
-    console.log('ALL PUZZLES SOLVED')
-    console.log('==============================')
+      async () => {
 
-    showMessage('Locker Unlocked')
+        console.log(
+          'START BUTTON CLICKED'
+        )
 
-    lockerRoot.setAttribute(
-      'visible',
-      false
+        try {
+
+          await introVideo.play()
+
+          introVideo.pause()
+
+          introVideo.currentTime = 0
+
+          console.log(
+            'MEDIA UNLOCK SUCCESS'
+          )
+
+        } catch (e) {
+
+          console.log(
+            'MEDIA UNLOCK FAILED'
+          )
+
+          console.error(e)
+        }
+
+        splashScreen.style.display =
+          'none'
+
+        console.log(
+          'SPLASH HIDDEN'
+        )
+      }
     )
 
-    console.log('LOCKER HIDDEN')
-
-    outroStarted = true
-
-    console.log('outroStarted = TRUE')
-
-    outroPlane.setAttribute(
-      'visible',
-      true
-    )
-
-    console.log('OUTRO PLANE SHOWN')
-
-    outroVideo.play()
-      .then(() => {
-
-        console.log('OUTRO VIDEO PLAYING')
-      })
-      .catch((err) => {
-
-        console.log('OUTRO VIDEO FAILED')
-        console.error(err)
-      })
-  }
-
-  // =========================================
-  // OUTRO COMPLETE
-  // =========================================
-
-  outroVideo.addEventListener('ended', () => {
-
-    console.log('==============================')
-    console.log('OUTRO VIDEO ENDED')
-    console.log('REDIRECTING')
-    console.log('==============================')
-
-    window.location.href =
-      'https://www.ryanpote.com/memento-mori'
-  })
-
-  // =========================================
-  // VIDEO DEBUG
-  // =========================================
-
-  introVideo.addEventListener('play', () => {
-
-    console.log('INTRO VIDEO PLAY EVENT')
-  })
-
-  introVideo.addEventListener('pause', () => {
-
-    console.log('INTRO VIDEO PAUSE EVENT')
-  })
-
-  introVideo.addEventListener('error', (e) => {
-
-    console.log('INTRO VIDEO ERROR')
-    console.error(e)
-  })
-
-  outroVideo.addEventListener('error', (e) => {
-
-    console.log('OUTRO VIDEO ERROR')
-    console.error(e)
-  })
-
-  console.log('==============================')
-  console.log('SCRIPT INITIALIZATION COMPLETE')
-  console.log('WAITING FOR USER')
-  console.log('==============================')
-
-</script>
+  </script>
 
 </body>
 </html>
+```
