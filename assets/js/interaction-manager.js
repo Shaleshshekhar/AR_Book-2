@@ -11,11 +11,6 @@ window.InteractionManager = {
         '[camera]'
       )
 
-    this.model =
-      document.querySelector(
-        '#lockerModel'
-      )
-
     this.scene =
       document.querySelector(
         'a-scene'
@@ -31,7 +26,7 @@ window.InteractionManager = {
       this.onTouchStart.bind(this)
 
     // ====================================
-    // WAIT FOR SCENE RENDER
+    // WAIT FOR XR CANVAS
     // ====================================
 
     this.scene.addEventListener(
@@ -40,25 +35,25 @@ window.InteractionManager = {
 
       () => {
 
-        UIManager.log(
-          'RENDER START'
-        )
-
         const canvas =
           this.scene.canvas
 
         if (!canvas) {
 
-          UIManager.log(
+          console.log(
             'NO CANVAS'
           )
 
           return
         }
 
-        UIManager.log(
-          'CANVAS READY'
+        console.log(
+          'XR CANVAS READY'
         )
+
+        // ====================================
+        // TOUCH ONLY
+        // ====================================
 
         canvas.addEventListener(
 
@@ -68,59 +63,132 @@ window.InteractionManager = {
 
           { passive: false }
         )
-
-        canvas.addEventListener(
-
-          'click',
-
-          this.onTouchStart
-        )
-
-        UIManager.log(
-          'TOUCH EVENTS ATTACHED'
-        )
       }
     )
   },
 
-
   // ====================================
   // TOUCH START
   // ====================================
-    
-      onTouchStart(event) {
 
-      UIManager.log(
-        'SCREEN TOUCHED'
+  onTouchStart(event) {
+
+    event.preventDefault()
+
+    // ====================================
+    // STATE CHECKS
+    // ====================================
+
+    if (
+      APP.phase !== 'locker'
+    ) return
+
+    if (
+      !APP.tracking
+    ) return
+
+    if (
+      !PuzzleManager.active
+    ) return
+
+    // ====================================
+    // TOUCH POSITION
+    // ====================================
+
+    const touch =
+      event.touches[0]
+
+    this.mouse.x =
+      (touch.clientX / window.innerWidth) * 2 - 1
+
+    this.mouse.y =
+      -(touch.clientY / window.innerHeight) * 2 + 1
+
+    // ====================================
+    // ACTIVE CAMERA
+    // ====================================
+
+    const camera =
+      this.camera
+        .object3D.children[0]
+
+    if (!camera)
+      return
+
+    // ====================================
+    // RAYCAST
+    // ====================================
+
+    this.raycaster.setFromCamera(
+
+      this.mouse,
+
+      camera
+    )
+
+    const meshes =
+      Object.values(
+        PuzzleManager.knobs
+      ).map(
+        knob => knob.mesh
       )
 
-      const firstKnob =
+    const intersects =
+      this.raycaster.intersectObjects(
+        meshes,
+        true
+      )
+
+    // ====================================
+    // NO HIT
+    // ====================================
+
+    if (!intersects.length)
+      return
+
+    // ====================================
+    // HIT OBJECT
+    // ====================================
+
+    let target =
+      intersects[0].object
+
+    let knob = null
+
+    // ====================================
+    // FIND PARENT KNOB
+    // ====================================
+
+    while (
+      target &&
+      !knob
+    ) {
+
+      knob =
         Object.values(
           PuzzleManager.knobs
-        )[0]
-
-      if (!firstKnob) {
-
-        UIManager.log(
-          'NO KNOBS'
+        ).find(
+          k =>
+            k.mesh === target
         )
 
-        return
-      }
+      target =
+        target.parent
+    }
 
-      UIManager.log(
-        `ROTATING ${firstKnob.id}`
-      )
+    // ====================================
+    // INVALID
+    // ====================================
 
-      PuzzleManager.rotateKnob(
-        firstKnob.id
-      )
-    },
+    if (!knob)
+      return
 
-  onTrackingLost() {
+    // ====================================
+    // ROTATE
+    // ====================================
 
-    UIManager.log(
-      'INTERACTION SUSPENDED'
+    PuzzleManager.rotateKnob(
+      knob.id
     )
   }
 }

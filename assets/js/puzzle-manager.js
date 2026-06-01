@@ -32,6 +32,9 @@ window.PuzzleManager = {
 
   setupKnobs() {
 
+    // RESET
+    this.knobs = {}
+
     const model =
       document
         .querySelector(
@@ -48,7 +51,15 @@ window.PuzzleManager = {
       return
     }
 
+    UIManager.log(
+      'SETTING UP KNOBS'
+    )
+
     model.traverse(child => {
+
+      // ====================================
+      // REGISTER KNOBS
+      // ====================================
 
       if (
         child.name.startsWith(
@@ -61,6 +72,13 @@ window.PuzzleManager = {
             'Code_',
             ''
           )
+
+        // ====================================
+        // RESET ROTATION
+        // IMPORTANT
+        // ====================================
+
+        child.rotation.y = 0
 
         this.knobs[id] = {
 
@@ -84,6 +102,14 @@ window.PuzzleManager = {
         )
       }
     })
+
+    UIManager.log(
+      `TOTAL KNOBS: ${
+        Object.keys(
+          this.knobs
+        ).length
+      }`
+    )
   },
 
   // ====================================
@@ -91,6 +117,10 @@ window.PuzzleManager = {
   // ====================================
 
   randomizeKnobs() {
+
+    UIManager.log(
+      'RANDOMIZING KNOBS'
+    )
 
     Object.values(
       this.knobs
@@ -103,22 +133,29 @@ window.PuzzleManager = {
 
       knob.value = value
 
-      knob.currentRotation =
+      const rotation =
         -value *
         THREE.MathUtils.degToRad(
           this.rotationStep
         )
 
+      knob.currentRotation =
+        rotation
+
       knob.targetRotation =
-        knob.currentRotation
+        rotation
 
       knob.mesh.rotation.y =
-        knob.currentRotation
+        rotation
+
+      UIManager.log(
+        `KNOB ${knob.id}: ${value}`
+      )
     })
   },
 
   // ====================================
-  // ROTATE
+  // ROTATE KNOB
   // ====================================
 
   rotateKnob(id) {
@@ -129,14 +166,26 @@ window.PuzzleManager = {
     if (!knob)
       return
 
+    // ====================================
+    // VALUE UPDATE
+    // ====================================
+
     knob.value =
       (knob.value + 1) % 10
+
+    // ====================================
+    // TARGET ROTATION
+    // ====================================
 
     knob.targetRotation =
       -knob.value *
       THREE.MathUtils.degToRad(
         this.rotationStep
       )
+
+    // ====================================
+    // QUEUE
+    // ====================================
 
     knob.queue.push(
       knob.targetRotation
@@ -148,6 +197,10 @@ window.PuzzleManager = {
 
     AudioManager.playTick()
 
+    // ====================================
+    // START TWEEN
+    // ====================================
+
     if (!knob.rotating) {
 
       this.processQueue(
@@ -157,10 +210,14 @@ window.PuzzleManager = {
   },
 
   // ====================================
-  // PROCESS QUEUE
+  // PROCESS ROTATION QUEUE
   // ====================================
 
   processQueue(knob) {
+
+    // ====================================
+    // END
+    // ====================================
 
     if (!knob.queue.length) {
 
@@ -194,12 +251,20 @@ window.PuzzleManager = {
             1
           )
 
+        // ====================================
+        // EASE
+        // ====================================
+
         const eased =
           1 -
           Math.pow(
             1 - t,
             3
           )
+
+        // ====================================
+        // INTERPOLATE
+        // ====================================
 
         const rotation =
           THREE.MathUtils.lerp(
@@ -214,6 +279,10 @@ window.PuzzleManager = {
         knob.currentRotation =
           rotation
 
+        // ====================================
+        // CONTINUE
+        // ====================================
+
         if (t < 1) {
 
           requestAnimationFrame(
@@ -222,11 +291,15 @@ window.PuzzleManager = {
 
         } else {
 
+          // FINAL SNAP
+
           knob.mesh.rotation.y =
             target
 
           knob.currentRotation =
             target
+
+          // NEXT QUEUED ROTATION
 
           this.processQueue(
             knob
