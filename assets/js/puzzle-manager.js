@@ -73,13 +73,6 @@ window.PuzzleManager = {
             ''
           )
 
-        // ====================================
-        // RESET ROTATION
-        // IMPORTANT
-        // ====================================
-
-        child.rotation.y = 0
-
         this.knobs[id] = {
 
           id,
