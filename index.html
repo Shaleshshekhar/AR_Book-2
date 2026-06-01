@@ -300,7 +300,30 @@
 
       opacity: 1;
     }
-        
+       
+    #fadeOverlay {
+
+      position: fixed;
+
+      inset: 0;
+
+      background: black;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      z-index: 9999999;
+
+      transition:
+        opacity 1s ease;
+    }
+
+    #fadeOverlay.visible {
+
+      opacity: 1;
+    }
+ 
     #debugPanel {
 
       position: fixed;
@@ -381,6 +404,8 @@
   <!-- STATUS MESSAGE -->
 
   <div id="statusMessage"></div>
+ 
+  <div id="fadeOverlay"></div>
 
   <!-- SCENE -->
 

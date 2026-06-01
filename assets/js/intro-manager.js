@@ -90,8 +90,31 @@ window.IntroManager = {
         )
 
         // ====================================
-        // OPTIONAL REDIRECT LATER
+        // FADE OUT
         // ====================================
+
+        const fade =
+          document.querySelector(
+            '#fadeOverlay'
+          )
+
+        if (fade) {
+
+          fade.classList.add(
+            'visible'
+          )
+        }
+
+        // ====================================
+        // REDIRECT
+        // ====================================
+
+        setTimeout(() => {
+
+          window.location.href =
+            'https://www.ryanpote.com/memento-mori'
+
+        }, 1400)
       }
     )
   },
