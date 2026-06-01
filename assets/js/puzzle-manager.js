@@ -270,8 +270,19 @@ window.PuzzleManager = {
             eased
           )
 
-        knob.mesh.rotation.y =
-          rotation
+        // ====================================
+        // PRESERVE IMPORTED ROTATION
+        // ====================================
+
+        knob.mesh.rotation.set(
+
+          knob.baseRotationX,
+
+          knob.baseRotationY +
+            rotation,
+
+          knob.baseRotationZ
+        )
 
         knob.currentRotation =
           rotation
@@ -284,8 +295,15 @@ window.PuzzleManager = {
 
         } else {
 
-          knob.mesh.rotation.y =
-            target
+          knob.mesh.rotation.set(
+
+            knob.baseRotationX,
+
+            knob.baseRotationY +
+              target,
+
+            knob.baseRotationZ
+          )
 
           knob.currentRotation =
             target
@@ -300,4 +318,5 @@ window.PuzzleManager = {
       animate
     )
   }
+
 }
