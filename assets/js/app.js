@@ -10,97 +10,113 @@ window.APP = {
 }
 
 // ====================================
-// INIT MANAGERS
+// WAIT FOR FULL WINDOW LOAD
 // ====================================
 
-console.log(
-  'INITIALIZING MANAGERS'
-)
+window.addEventListener(
 
-AudioManager.init()
-UIManager.init()
-TrackingManager.init()
-IntroManager.init()
-InteractionManager.init()
-PuzzleManager.init()
+  'load',
 
-// ====================================
-// SPLASH REFERENCES
-// ====================================
-
-const splashScreen =
-  document.querySelector(
-    '#splashScreen'
-  )
-
-const startButton =
-  document.querySelector(
-    '#startButton'
-  )
-
-console.log(
-  'SPLASH REFERENCES:',
-  splashScreen,
-  startButton
-)
-
-// ====================================
-// START BUTTON
-// ====================================
-
-startButton.addEventListener(
-
-  'click',
-
-  async () => {
+  () => {
 
     console.log(
-      'START BUTTON CLICKED'
+      'WINDOW LOADED'
     )
 
-    if (APP.started) {
+    // ====================================
+    // INIT MANAGERS
+    // ====================================
 
-      console.log(
-        'APP ALREADY STARTED'
+    AudioManager.init()
+    UIManager.init()
+    TrackingManager.init()
+    IntroManager.init()
+    InteractionManager.init()
+    PuzzleManager.init()
+
+    console.log(
+      'ALL MANAGERS INITIALIZED'
+    )
+
+    // ====================================
+    // SPLASH REFERENCES
+    // ====================================
+
+    const splashScreen =
+      document.querySelector(
+        '#splashScreen'
       )
 
-      return
-    }
-
-    APP.started = true
-
-    startButton.innerText =
-      'LOADING...'
-
-    startButton.disabled = true
-
-    // ====================================
-    // AUDIO UNLOCK
-    // ====================================
-
-    await AudioManager.unlock()
+    const startButton =
+      document.querySelector(
+        '#startButton'
+      )
 
     console.log(
-      'AUDIO READY'
+      'SPLASH REFERENCES:',
+      splashScreen,
+      startButton
     )
 
     // ====================================
-    // HIDE SPLASH
+    // START BUTTON
     // ====================================
 
-    splashScreen.style.display =
-      'none'
+    startButton.addEventListener(
 
-    console.log(
-      'SPLASH HIDDEN'
-    )
+      'click',
 
-    // ====================================
-    // STATUS MESSAGE
-    // ====================================
+      async () => {
 
-    UIManager.showMessage(
-      'Scan the book'
+        console.log(
+          'START BUTTON CLICKED'
+        )
+
+        if (APP.started) {
+
+          console.log(
+            'APP ALREADY STARTED'
+          )
+
+          return
+        }
+
+        APP.started = true
+
+        startButton.innerText =
+          'LOADING...'
+
+        startButton.disabled = true
+
+        // ====================================
+        // AUDIO UNLOCK
+        // ====================================
+
+        await AudioManager.unlock()
+
+        console.log(
+          'AUDIO READY'
+        )
+
+        // ====================================
+        // HIDE SPLASH
+        // ====================================
+
+        splashScreen.style.display =
+          'none'
+
+        console.log(
+          'SPLASH HIDDEN'
+        )
+
+        // ====================================
+        // SHOW STATUS
+        // ====================================
+
+        UIManager.showMessage(
+          'Scan the book'
+        )
+      }
     )
   }
 )
