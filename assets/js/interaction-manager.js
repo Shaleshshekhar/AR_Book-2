@@ -88,54 +88,34 @@ window.InteractionManager = {
   // TOUCH START
   // ====================================
     
-  onTouchStart(event) {
-
-    UIManager.log(
-      'SCREEN TOUCHED'
-    )
-
-    // ====================================
-    // BASIC STATE CHECK
-    // ====================================
-
-    UIManager.log(
-      `PHASE: ${APP.phase}`
-    )
-
-    UIManager.log(
-      `TRACKING: ${APP.tracking}`
-    )
-
-    UIManager.log(
-      `PUZZLE ACTIVE: ${PuzzleManager.active}`
-    )
-
-    // ====================================
-    // FORCE TEST
-    // ====================================
-
-    const firstKnob =
-      Object.values(
-        PuzzleManager.knobs
-      )[0]
-
-    if (!firstKnob) {
+      onTouchStart(event) {
 
       UIManager.log(
-        'NO KNOBS FOUND'
+        'SCREEN TOUCHED'
       )
 
-      return
-    }
+      const firstKnob =
+        Object.values(
+          PuzzleManager.knobs
+        )[0]
 
-    UIManager.log(
-      `FORCE ROTATING: ${firstKnob.id}`
-    )
+      if (!firstKnob) {
 
-    PuzzleManager.rotateKnob(
-      firstKnob.id
-    )
-  },
+        UIManager.log(
+          'NO KNOBS'
+        )
+
+        return
+      }
+
+      UIManager.log(
+        `ROTATING ${firstKnob.id}`
+      )
+
+      PuzzleManager.rotateKnob(
+        firstKnob.id
+      )
+    },
 
   onTrackingLost() {
 
