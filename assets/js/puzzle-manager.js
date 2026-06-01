@@ -147,7 +147,7 @@ window.PuzzleManager = {
       knob.targetRotation =
         knob.currentRotation
 
-      knob.mesh.rotation.x =
+      knob.mesh.rotation.y =
         knob.currentRotation
 
       console.log(
@@ -267,7 +267,7 @@ window.PuzzleManager = {
             eased
           )
 
-        knob.mesh.rotation.x =
+        knob.mesh.rotation.y =
           rotation
 
         knob.currentRotation =
@@ -284,7 +284,7 @@ window.PuzzleManager = {
           knob.currentRotation =
             target
 
-          knob.mesh.rotation.x =
+          knob.mesh.rotation.y =
             target
 
           this.processQueue(
