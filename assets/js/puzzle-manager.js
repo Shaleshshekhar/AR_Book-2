@@ -132,7 +132,7 @@ window.PuzzleManager = {
       knob.targetRotation =
         knob.currentRotation
 
-      knob.mesh.rotation.x =
+      knob.mesh.rotation.y =
         knob.currentRotation
 
       UIManager.log(
@@ -244,7 +244,7 @@ window.PuzzleManager = {
             eased
           )
 
-        knob.mesh.rotation.x =
+        knob.mesh.rotation.y =
           rotation
 
         knob.currentRotation =
@@ -258,7 +258,7 @@ window.PuzzleManager = {
 
         } else {
 
-          knob.mesh.rotation.x =
+          knob.mesh.rotation.y =
             target
 
           knob.currentRotation =
