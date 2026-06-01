@@ -20,7 +20,7 @@ window.PuzzleManager = {
 
     this.setupKnobs()
 
-    // this.randomizeKnobs()
+    this.randomizeKnobs()
   },
 
   init() {
