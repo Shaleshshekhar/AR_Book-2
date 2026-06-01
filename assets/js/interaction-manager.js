@@ -228,18 +228,32 @@ window.InteractionManager = {
       `HIT: ${hit.name}`
     )
 
-    const knob =
-      Object.values(
-        PuzzleManager.knobs
-      ).find(
-        k =>
-          k.mesh === hit
-      )
+    let targetObject =
+      hit
+
+    let knob = null
+
+    while (
+      targetObject &&
+      !knob
+    ) {
+
+      knob =
+        Object.values(
+          PuzzleManager.knobs
+        ).find(
+          k =>
+            k.mesh === targetObject
+        )
+
+      targetObject =
+        targetObject.parent
+    }
 
     if (!knob) {
 
       UIManager.log(
-        'KNOB NOT FOUND'
+        'NO KNOB FOUND'
       )
 
       return
