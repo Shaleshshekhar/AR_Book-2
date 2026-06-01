@@ -8,10 +8,6 @@ window.PuzzleManager = {
 
   activate() {
 
-    console.log(
-      'PUZZLE ACTIVATED'
-    )
-
     UIManager.log(
       'PUZZLE ACTIVATED'
     )
@@ -52,19 +48,7 @@ window.PuzzleManager = {
       return
     }
 
-    UIManager.log(
-      'SETTING UP KNOBS'
-    )
-
     model.traverse(child => {
-
-      UIManager.log(
-        `${child.name}`
-      )
-
-      // ====================================
-      // REGISTER KNOBS
-      // ====================================
 
       if (
         child.name.startsWith(
@@ -92,17 +76,7 @@ window.PuzzleManager = {
 
           rotating: false,
 
-          queue: [],
-
-          baseRotationX:
-            child.rotation.x,
-
-          baseRotationY:
-            child.rotation.y,
-
-          baseRotationZ:
-            child.rotation.z
-
+          queue: []
         }
 
         UIManager.log(
@@ -118,10 +92,6 @@ window.PuzzleManager = {
 
   randomizeKnobs() {
 
-    UIManager.log(
-      'RANDOMIZING KNOBS'
-    )
-
     Object.values(
       this.knobs
     ).forEach(knob => {
@@ -133,10 +103,6 @@ window.PuzzleManager = {
 
       knob.value = value
 
-      // ====================================
-      // ROTATION VALUE
-      // ====================================
-
       knob.currentRotation =
         -value *
         THREE.MathUtils.degToRad(
@@ -146,29 +112,13 @@ window.PuzzleManager = {
       knob.targetRotation =
         knob.currentRotation
 
-      // ====================================
-      // APPLY ROTATION
-      // PRESERVE IMPORTED AXES
-      // ====================================
-
-      knob.mesh.rotation.set(
-
-        knob.baseRotationX,
-
-        knob.baseRotationY +
-          knob.currentRotation,
-
-        knob.baseRotationZ
-      )
-
-      UIManager.log(
-        `KNOB ${knob.id}: ${value}`
-      )
+      knob.mesh.rotation.y =
+        knob.currentRotation
     })
   },
 
   // ====================================
-  // ROTATE KNOB
+  // ROTATE
   // ====================================
 
   rotateKnob(id) {
@@ -179,26 +129,14 @@ window.PuzzleManager = {
     if (!knob)
       return
 
-    // ====================================
-    // VALUE
-    // ====================================
-
     knob.value =
       (knob.value + 1) % 10
-
-    // ====================================
-    // TARGET ROTATION
-    // ====================================
 
     knob.targetRotation =
       -knob.value *
       THREE.MathUtils.degToRad(
         this.rotationStep
       )
-
-    // ====================================
-    // QUEUE
-    // ====================================
 
     knob.queue.push(
       knob.targetRotation
@@ -270,19 +208,8 @@ window.PuzzleManager = {
             eased
           )
 
-        // ====================================
-        // PRESERVE IMPORTED ROTATION
-        // ====================================
-
-        knob.mesh.rotation.set(
-
-          knob.baseRotationX,
-
-          knob.baseRotationY +
-            rotation,
-
-          knob.baseRotationZ
-        )
+        knob.mesh.rotation.y =
+          rotation
 
         knob.currentRotation =
           rotation
@@ -295,15 +222,8 @@ window.PuzzleManager = {
 
         } else {
 
-          knob.mesh.rotation.set(
-
-            knob.baseRotationX,
-
-            knob.baseRotationY +
-              target,
-
-            knob.baseRotationZ
-          )
+          knob.mesh.rotation.y =
+            target
 
           knob.currentRotation =
             target
@@ -318,5 +238,4 @@ window.PuzzleManager = {
       animate
     )
   }
-
 }
