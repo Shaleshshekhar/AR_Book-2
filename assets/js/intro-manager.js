@@ -54,15 +54,36 @@ window.IntroManager = {
         )
 
         APP.phase = 'locker'
+
+        // ====================================
+        // ACTIVATE PUZZLE
+        // ====================================
+
+        PuzzleManager.activate()
+
+        UIManager.showMessage(
+          'Decrypt the locker'
+        )
       }
     )
   },
 
   onTargetFound() {
 
-    if (!this.introStarted) {
+    if (
+      APP.phase === 'intro'
+    ) {
+
+      this.introVideo.play()
+    }
+
+    if (
+      !this.introStarted
+    ) {
 
       this.introStarted = true
+
+      APP.phase = 'intro'
 
       this.introPlane.setAttribute(
         'visible',
@@ -70,6 +91,13 @@ window.IntroManager = {
       )
 
       this.introVideo.play()
+    }
+
+    if (
+      APP.phase === 'outro'
+    ) {
+
+      this.outroVideo.play()
     }
   },
 
@@ -80,6 +108,8 @@ window.IntroManager = {
   },
 
   playOutro() {
+
+    APP.phase = 'outro'
 
     this.model.setAttribute(
       'visible',
