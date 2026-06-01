@@ -305,175 +305,426 @@
 
   <script>
 
-    const splashScreen = document.querySelector('#splashScreen')
-    const startButton = document.querySelector('#startButton')
+  console.log('==============================')
+  console.log('APP SCRIPT STARTED')
+  console.log('==============================')
 
-    const introVideo = document.querySelector('#introVideo')
-    const outroVideo = document.querySelector('#outroVideo')
+  // =========================================
+  // ELEMENT REFERENCES
+  // =========================================
 
-    const introPlane = document.querySelector('#introPlane')
-    const outroPlane = document.querySelector('#outroPlane')
+  const splashScreen =
+    document.querySelector('#splashScreen')
 
-    const lockerRoot = document.querySelector('#lockerRoot')
+  const startButton =
+    document.querySelector('#startButton')
 
-    const statusText = document.querySelector('#statusText')
+  const introVideo =
+    document.querySelector('#introVideo')
 
-    const imageTarget =
-      document.querySelector('xrextras-named-image-target')
+  const outroVideo =
+    document.querySelector('#outroVideo')
 
-    let experienceStarted = false
+  const introPlane =
+    document.querySelector('#introPlane')
 
-    let introCompleted = false
-    let outroStarted = false
+  const outroPlane =
+    document.querySelector('#outroPlane')
 
-    // =========================================
-    // STATUS MESSAGE
-    // =========================================
+  const lockerRoot =
+    document.querySelector('#lockerRoot')
 
-    function showMessage(text) {
+  const statusText =
+    document.querySelector('#statusText')
 
-      statusText.innerText = text
+  const imageTarget =
+    document.querySelector('xrextras-named-image-target')
 
-      statusText.style.display = 'block'
+  console.log('ELEMENT REFERENCES COMPLETE')
 
-      setTimeout(() => {
+  console.log('splashScreen:', splashScreen)
+  console.log('startButton:', startButton)
+  console.log('introVideo:', introVideo)
+  console.log('outroVideo:', outroVideo)
+  console.log('imageTarget:', imageTarget)
 
-        statusText.style.display = 'none'
+  // =========================================
+  // GLOBAL STATE
+  // =========================================
 
-      }, 2500)
+  let experienceStarted = false
+
+  let introCompleted = false
+  let outroStarted = false
+
+  window.puzzleTrackingActive = false
+
+  console.log('INITIAL STATE READY')
+
+  // =========================================
+  // STATUS MESSAGE
+  // =========================================
+
+  function showMessage(text) {
+
+    console.log('SHOW MESSAGE:', text)
+
+    statusText.innerText = text
+
+    statusText.style.display = 'block'
+
+    setTimeout(() => {
+
+      statusText.style.display = 'none'
+
+      console.log('MESSAGE HIDDEN')
+
+    }, 2500)
+  }
+
+  // =========================================
+  // DEBUG TOUCHES
+  // =========================================
+
+  document.body.addEventListener('touchstart', () => {
+
+    console.log('BODY TOUCH DETECTED')
+
+  })
+
+  document.body.addEventListener('click', () => {
+
+    console.log('BODY CLICK DETECTED')
+
+  })
+
+  // =========================================
+  // START EXPERIENCE
+  // =========================================
+
+  const unlockExperience = async (event) => {
+
+    console.log('==============================')
+    console.log('unlockExperience CALLED')
+    console.log('==============================')
+
+    console.log('EVENT:', event)
+
+    if (experienceStarted) {
+
+      console.log('BLOCKED: experience already started')
+
+      return
     }
 
-    // =========================================
-    // START EXPERIENCE
-    // =========================================
+    experienceStarted = true
 
-    const unlockExperience = async () => {
+    console.log('experienceStarted = TRUE')
 
-      if (experienceStarted) return
+    startButton.innerText = 'LOADING...'
 
-      experienceStarted = true
+    console.log('BUTTON TEXT CHANGED')
 
-      startButton.innerText = 'LOADING...'
+    try {
 
-      try {
+      console.log('ATTEMPTING MEDIA UNLOCK')
 
-        introVideo.muted = false
-        outroVideo.muted = false
+      introVideo.muted = false
+      outroVideo.muted = false
 
-        await introVideo.play()
+      console.log('VIDEOS UNMUTED')
 
-        introVideo.pause()
+      await introVideo.play()
 
-        introVideo.currentTime = 0
-
-      } catch (e) {
-
-        console.log('Media unlock handled')
-      }
-
-      splashScreen.style.display = 'none'
-
-      window.puzzleTrackingActive = true
-    }
-
-    startButton.addEventListener('click', unlockExperience)
-    startButton.addEventListener('touchstart', unlockExperience)
-
-    // =========================================
-    // TARGET FOUND
-    // =========================================
-
-    imageTarget.addEventListener('targetFound', () => {
-
-      if (!experienceStarted) return
-
-      window.puzzleTrackingActive = true
-
-      // INTRO
-      if (!introCompleted) {
-
-        introPlane.setAttribute('visible', true)
-
-        introVideo.play().catch(() => {})
-      }
-
-      // OUTRO
-      if (introCompleted && outroStarted) {
-
-        outroVideo.play().catch(() => {})
-      }
-    })
-
-    // =========================================
-    // TARGET LOST
-    // =========================================
-
-    imageTarget.addEventListener('targetLost', () => {
+      console.log('INTRO VIDEO PLAY SUCCESS')
 
       introVideo.pause()
-      outroVideo.pause()
 
-      window.puzzleTrackingActive = false
-    })
+      console.log('INTRO VIDEO PAUSED')
 
-    // =========================================
-    // INTRO ENDED
-    // =========================================
+      introVideo.currentTime = 0
 
-    introVideo.addEventListener('ended', () => {
+      console.log('INTRO VIDEO RESET')
 
-      introCompleted = true
+    } catch (e) {
 
-      introPlane.setAttribute('visible', false)
-
-      lockerRoot.setAttribute('visible', true)
-    })
-
-    // =========================================
-    // SINGLE ROW SOLVED
-    // =========================================
-
-    window.onPuzzleSolved = (type) => {
-
-      if (type === 'top') {
-
-        showMessage('Dr. Ringuet Code Solved')
-      }
-
-      if (type === 'bottom') {
-
-        showMessage('Saran Security Code Solved')
-      }
+      console.log('MEDIA UNLOCK ERROR:')
+      console.error(e)
     }
 
-    // =========================================
-    // ALL SOLVED
-    // =========================================
+    console.log('ATTEMPTING TO HIDE SPLASH')
 
-    window.onAllPuzzleSolved = () => {
+    splashScreen.style.display = 'none'
 
-      showMessage('Locker Unlocked')
+    console.log('SPLASH DISPLAY SET TO NONE')
 
-      lockerRoot.setAttribute('visible', false)
+    console.log(
+      'CURRENT DISPLAY VALUE:',
+      splashScreen.style.display
+    )
 
-      outroStarted = true
+    window.puzzleTrackingActive = true
 
-      outroPlane.setAttribute('visible', true)
+    console.log('PUZZLE TRACKING ENABLED')
 
-      outroVideo.play().catch(() => {})
+    console.log('==============================')
+    console.log('unlockExperience COMPLETE')
+    console.log('==============================')
+  }
+
+  // =========================================
+  // BUTTON EVENTS
+  // =========================================
+
+  console.log('REGISTERING BUTTON EVENTS')
+
+  startButton.addEventListener('click', (e) => {
+
+    console.log('BUTTON CLICK EVENT FIRED')
+
+    unlockExperience(e)
+  })
+
+  startButton.addEventListener('touchstart', (e) => {
+
+    console.log('BUTTON TOUCHSTART EVENT FIRED')
+
+    unlockExperience(e)
+  })
+
+  console.log('BUTTON EVENTS REGISTERED')
+
+  // =========================================
+  // TARGET FOUND
+  // =========================================
+
+  imageTarget.addEventListener('targetFound', () => {
+
+    console.log('==============================')
+    console.log('TARGET FOUND')
+    console.log('==============================')
+
+    console.log(
+      'experienceStarted:',
+      experienceStarted
+    )
+
+    if (!experienceStarted) {
+
+      console.log('TARGET FOUND BLOCKED')
+
+      return
     }
 
-    // =========================================
-    // OUTRO COMPLETE
-    // =========================================
+    window.puzzleTrackingActive = true
 
-    outroVideo.addEventListener('ended', () => {
+    console.log('TRACKING ENABLED')
 
-      window.location.href =
-        'https://www.ryanpote.com/memento-mori'
-    })
+    // INTRO
+    if (!introCompleted) {
 
-  </script>
+      console.log('STARTING INTRO VIDEO')
+
+      introPlane.setAttribute(
+        'visible',
+        true
+      )
+
+      introVideo.play()
+        .then(() => {
+
+          console.log('INTRO VIDEO PLAYING')
+        })
+        .catch((err) => {
+
+          console.log('INTRO VIDEO PLAY FAILED')
+          console.error(err)
+        })
+    }
+
+    // OUTRO
+    if (
+      introCompleted &&
+      outroStarted
+    ) {
+
+      console.log('RESUMING OUTRO VIDEO')
+
+      outroVideo.play()
+        .then(() => {
+
+          console.log('OUTRO VIDEO RESUMED')
+        })
+        .catch((err) => {
+
+          console.log('OUTRO VIDEO RESUME FAILED')
+          console.error(err)
+        })
+    }
+  })
+
+  // =========================================
+  // TARGET LOST
+  // =========================================
+
+  imageTarget.addEventListener('targetLost', () => {
+
+    console.log('==============================')
+    console.log('TARGET LOST')
+    console.log('==============================')
+
+    introVideo.pause()
+
+    outroVideo.pause()
+
+    console.log('VIDEOS PAUSED')
+
+    window.puzzleTrackingActive = false
+
+    console.log('TRACKING DISABLED')
+  })
+
+  // =========================================
+  // INTRO ENDED
+  // =========================================
+
+  introVideo.addEventListener('ended', () => {
+
+    console.log('==============================')
+    console.log('INTRO VIDEO ENDED')
+    console.log('==============================')
+
+    introCompleted = true
+
+    console.log('introCompleted = TRUE')
+
+    introPlane.setAttribute(
+      'visible',
+      false
+    )
+
+    console.log('INTRO PLANE HIDDEN')
+
+    lockerRoot.setAttribute(
+      'visible',
+      true
+    )
+
+    console.log('LOCKER SHOWN')
+  })
+
+  // =========================================
+  // ROW SOLVED
+  // =========================================
+
+  window.onPuzzleSolved = (type) => {
+
+    console.log('ROW SOLVED:', type)
+
+    if (type === 'top') {
+
+      showMessage(
+        'Dr. Ringuet Code Solved'
+      )
+    }
+
+    if (type === 'bottom') {
+
+      showMessage(
+        'Saran Security Code Solved'
+      )
+    }
+  }
+
+  // =========================================
+  // ALL SOLVED
+  // =========================================
+
+  window.onAllPuzzleSolved = () => {
+
+    console.log('==============================')
+    console.log('ALL PUZZLES SOLVED')
+    console.log('==============================')
+
+    showMessage('Locker Unlocked')
+
+    lockerRoot.setAttribute(
+      'visible',
+      false
+    )
+
+    console.log('LOCKER HIDDEN')
+
+    outroStarted = true
+
+    console.log('outroStarted = TRUE')
+
+    outroPlane.setAttribute(
+      'visible',
+      true
+    )
+
+    console.log('OUTRO PLANE SHOWN')
+
+    outroVideo.play()
+      .then(() => {
+
+        console.log('OUTRO VIDEO PLAYING')
+      })
+      .catch((err) => {
+
+        console.log('OUTRO VIDEO FAILED')
+        console.error(err)
+      })
+  }
+
+  // =========================================
+  // OUTRO COMPLETE
+  // =========================================
+
+  outroVideo.addEventListener('ended', () => {
+
+    console.log('==============================')
+    console.log('OUTRO VIDEO ENDED')
+    console.log('REDIRECTING')
+    console.log('==============================')
+
+    window.location.href =
+      'https://www.ryanpote.com/memento-mori'
+  })
+
+  // =========================================
+  // VIDEO DEBUG
+  // =========================================
+
+  introVideo.addEventListener('play', () => {
+
+    console.log('INTRO VIDEO PLAY EVENT')
+  })
+
+  introVideo.addEventListener('pause', () => {
+
+    console.log('INTRO VIDEO PAUSE EVENT')
+  })
+
+  introVideo.addEventListener('error', (e) => {
+
+    console.log('INTRO VIDEO ERROR')
+    console.error(e)
+  })
+
+  outroVideo.addEventListener('error', (e) => {
+
+    console.log('OUTRO VIDEO ERROR')
+    console.error(e)
+  })
+
+  console.log('==============================')
+  console.log('SCRIPT INITIALIZATION COMPLETE')
+  console.log('WAITING FOR USER')
+  console.log('==============================')
+
+</script>
 
 </body>
 </html>
