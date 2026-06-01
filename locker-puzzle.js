@@ -46,7 +46,20 @@ AFRAME.registerComponent('locker-puzzle', {
     this.el.addEventListener('model-loaded', () => {
 
       this.model = this.el.getObject3D('mesh')
+        // Hide all hit materials
 
+        this.model.traverse((child) => {
+
+        if (!child.material) return
+
+        if (child.material.name === 'hitMesh_mat') {
+
+            child.visible = false
+
+            child.material.transparent = true
+            child.material.opacity = 0
+        }
+        })
       this.setupKnobs()
 
       this.randomizePuzzle()
@@ -69,6 +82,18 @@ AFRAME.registerComponent('locker-puzzle', {
 
       const codeMesh = this.model.getObjectByName(`Code_${id}`)
       const hitMesh = this.model.getObjectByName(`Hit_Code_${id}`)
+        // Hide hit mesh material
+
+        hitMesh.visible = false
+
+        hitMesh.traverse((child) => {
+
+        if (child.material) {
+
+            child.material.transparent = true
+            child.material.opacity = 0
+        }
+        })
 
       if (!codeMesh || !hitMesh) {
         console.warn(`Missing knob ${id}`)

@@ -56,13 +56,77 @@
       font-size: 18px;
       display: none;
     }
+    #splashScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      background: black;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      color: white;
+    }
+
+    #splashContent {
+      text-align: center;
+      padding: 30px;
+    }
+
+    #splashTitle {
+      font-size: 42px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      letter-spacing: 4px;
+    }
+
+    #splashSubtitle {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 40px;
+    }
+
+    #startButton {
+      border: none;
+      outline: none;
+
+      padding: 16px 30px;
+
+      font-size: 18px;
+      border-radius: 12px;
+
+      background: white;
+      color: black;
+
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
 
 <div id="statusText">Puzzle Solved</div>
+<div id="splashScreen">
 
+  <div id="splashContent">
+
+    <div id="splashTitle">
+      ORION
+    </div>
+
+    <div id="splashSubtitle">
+      Scan the book to begin the experience
+    </div>
+
+    <button id="startButton">
+      START EXPERIENCE
+    </button>
+
+  </div>
+
+</div>
 <a-scene
   xrextras-gesture-detector
   xrextras-almost-there
@@ -94,7 +158,7 @@
     <a-asset-item id="lockerModel" src="assets/locker.glb"></a-asset-item>
   </a-assets>
 
-  <a-camera position="0 4 10"></a-camera>
+  <a-camera position="0 0 0"></a-camera>
 
   <xrextras-named-image-target name="book">
 
@@ -156,8 +220,9 @@
   }
 
   // ---------- TARGET FOUND ----------
-  imageTarget.addEventListener('targetFound', () => {
+ imageTarget.addEventListener('targetFound', () => {
 
+  if (!experienceStarted) return
     if (!introCompleted) {
       introPlane.setAttribute('visible', true)
 
