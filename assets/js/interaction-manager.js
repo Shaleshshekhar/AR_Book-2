@@ -109,12 +109,10 @@ window.InteractionManager = {
     // ====================================
 
     const camera =
-      this.camera
-        .object3D.children[0]
-
-    if (!camera)
+     this.scene.camera 
+     
+     if (!camera) 
       return
-
     // ====================================
     // RAYCAST
     // ====================================
