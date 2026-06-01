@@ -10,7 +10,7 @@
   <script src="https://cdn.8thwall.com/web/xrextras/xrextras.js"></script>
 
   <!-- XR Engine -->
-  <script async src="../engine/xr.js" data-preload-chunks="slam"></script>
+  <script async src="./engine/xr.js" data-preload-chunks="slam"></script>
 
   <!-- IMAGE TARGET -->
 
@@ -28,7 +28,7 @@
 
           type: 'PLANAR',
 
-          imagePath: '/assets/targets/ghost_book_luminance.jpg',
+          imagePath: './assets/targets/ghost_book_luminance.jpg',
 
           properties: {
 
@@ -415,7 +415,7 @@
       <video
         id="introVideo"
 
-        src="/assets/intro_video.mp4"
+        src="./assets/intro_video.mp4"
 
         preload="auto"
 
@@ -432,7 +432,7 @@
       <video
         id="outroVideo"
 
-        src="/assets/outro_video.mp4"
+        src="./assets/outro_video.mp4"
 
         preload="auto"
 
@@ -450,7 +450,7 @@
 
         id="lockerAsset"
 
-        src="/assets/locker.glb">
+        src="./assets/locker.glb">
       </a-asset-item>
 
     </a-assets>
