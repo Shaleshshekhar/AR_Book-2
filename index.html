@@ -130,7 +130,6 @@
   </xrextras-named-image-target>
 
 </a-scene>
-
 <script>
   const introVideo = document.querySelector('#introVideo')
   const outroVideo = document.querySelector('#outroVideo')
@@ -142,6 +141,11 @@
 
   const statusText = document.querySelector('#statusText')
 
+  const imageTarget = document.querySelector('xrextras-named-image-target')
+
+  let introCompleted = false
+  let outroStarted = false
+
   function showMessage(text) {
     statusText.innerText = text
     statusText.style.display = 'block'
@@ -151,39 +155,75 @@
     }, 2500)
   }
 
-  // Start intro video once target is found
-  document.querySelector('xrextras-named-image-target')
-    .addEventListener('targetFound', () => {
+  // ---------- TARGET FOUND ----------
+  imageTarget.addEventListener('targetFound', () => {
 
+    if (!introCompleted) {
       introPlane.setAttribute('visible', true)
 
       introVideo.play().catch(() => {})
-    })
+    }
 
+    // Resume active video if paused
+    if (introCompleted && outroStarted) {
+      outroVideo.play().catch(() => {})
+    }
+
+    // Re-enable puzzle interaction
+    window.puzzleTrackingActive = true
+  })
+
+  // ---------- TARGET LOST ----------
+  imageTarget.addEventListener('targetLost', () => {
+
+    introVideo.pause()
+    outroVideo.pause()
+
+    // Disable interactions while tracking lost
+    window.puzzleTrackingActive = false
+  })
+
+  // ---------- INTRO VIDEO END ----------
   introVideo.addEventListener('ended', () => {
+
+    introCompleted = true
+
     introPlane.setAttribute('visible', false)
 
     lockerRoot.setAttribute('visible', true)
   })
 
-  // Global callback from puzzle component
+  // ---------- PUZZLE CALLBACK ----------
   window.onPuzzleSolved = (type) => {
 
-    if(type === 'top') {
-      showMessage('Top Code Solved : 11235')
+    if (type === 'top') {
+      showMessage('Dr. Ringuet Code Solved')
     }
 
-    if(type === 'bottom') {
-      showMessage('Bottom Code Solved : 81321')
+    if (type === 'bottom') {
+      showMessage('Saran Security Code Solved')
     }
+  }
+
+  // ---------- BOTH SOLVED ----------
+  window.onAllPuzzleSolved = () => {
+
+    showMessage('Locker Unlocked')
 
     lockerRoot.setAttribute('visible', false)
+
+    outroStarted = true
 
     outroPlane.setAttribute('visible', true)
 
     outroVideo.play().catch(() => {})
   }
-</script>
 
+  // ---------- OUTRO COMPLETE ----------
+  outroVideo.addEventListener('ended', () => {
+
+    window.location.href = 'https://www.ryanpote.com/memento-mori'
+  })
+</script>
 </body>
 </html>
