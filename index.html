@@ -334,6 +334,63 @@
         0 0 12px
         rgba(176,158,117,0.12);
     }
+        
+    /* =========================================
+      BUTTON LOADING
+    ========================================= */
+
+    #buttonText {
+
+      display: inline-block;
+
+      min-width: 11ch;
+    }
+
+    #loadingDots {
+
+      display: inline-block;
+
+      width: 1.5ch;
+
+      text-align: left;
+
+      animation:
+        loadingDots 1.1s infinite;
+    }
+
+    @keyframes loadingDots {
+
+      0% {
+
+        opacity: 0.2;
+      }
+
+      25% {
+
+        opacity: 1;
+      }
+
+      50% {
+
+        opacity: 0.2;
+      }
+
+      100% {
+
+        opacity: 0.2;
+      }
+    }
+
+    /* =========================================
+      DISABLED BUTTON
+    ========================================= */
+
+    #startButton:disabled {
+
+      opacity: 0.72;
+
+      cursor: default;
+    }
 
     @keyframes ctaReveal {
 
@@ -493,9 +550,18 @@
 
     <div id="middleSpacer"></div>
 
-    <button id="startButton">
+      
+    <button
+      id="startButton"
+      disabled>
 
-      START EXPERIENCE
+      <span id="buttonText">
+        LOADING
+      </span>
+
+      <span id="loadingDots">
+        ...
+      </span>
 
     </button>
 

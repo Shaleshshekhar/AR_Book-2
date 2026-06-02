@@ -43,6 +43,40 @@ window.InteractionManager = {
           'XR CANVAS READY'
         )
 
+        // ====================================
+        // ENABLE SPLASH CTA
+        // ====================================
+
+        const button =
+          document.querySelector(
+            '#startButton'
+          )
+
+        const buttonText =
+          document.querySelector(
+            '#buttonText'
+          )
+
+        const loadingDots =
+          document.querySelector(
+            '#loadingDots'
+          )
+
+        if (
+          button &&
+          buttonText &&
+          loadingDots
+        ) {
+
+          button.disabled = false
+
+          buttonText.innerText =
+            'START EXPERIENCE'
+
+          loadingDots.style.display =
+            'none'
+        }
+
         canvas.addEventListener(
 
           'touchstart',
