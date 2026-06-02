@@ -106,18 +106,68 @@ window.IntroManager = {
         }
 
         // ====================================
-        // REDIRECT
+        // REDIRECT TERMINAL
         // ====================================
 
         setTimeout(() => {
 
-          window.location.href =
-            'https://www.ryanpote.com/memento-mori'
+          const redirectScreen =
+            document.querySelector(
+              '#redirectScreen'
+            )
 
-        }, 1400)
-      }
-    )
-  },
+          const redirectText =
+            document.querySelector(
+              '#redirectText'
+            )
+
+          redirectScreen.classList.add(
+            'visible'
+          )
+
+          const message =
+            "Redirecting to Ethan Cain's Personal Computer..."
+
+          let index = 0
+
+          const typeInterval =
+            setInterval(() => {
+
+              const visibleText =
+                message.slice(
+                  0,
+                  index
+                )
+
+              redirectText.innerHTML =
+
+                `${visibleText}<span id="redirectCursor">|</span>`
+
+              index++
+
+              if (
+                index > message.length
+              ) {
+
+                clearInterval(
+                  typeInterval
+                )
+
+                setTimeout(() => {
+
+                  window.location.href =
+                    'https://www.ryanpote.com/memento-mori'
+
+                }, 1200)
+              }
+
+            }, 32)
+
+        }, 850)
+
+              }
+            )
+          },
 
   // ====================================
   // TARGET FOUND

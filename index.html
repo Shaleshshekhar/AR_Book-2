@@ -495,6 +495,86 @@
 
       white-space: pre-wrap;
     }
+    
+    /* =========================================
+      REDIRECT SCREEN
+    ========================================= */
+
+    #redirectScreen {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 99999999;
+
+      background: black;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition:
+        opacity 0.8s ease;
+    }
+
+    #redirectScreen.visible {
+
+      opacity: 1;
+    }
+
+    #redirectText {
+
+      color: #8A6D2C;
+
+      font-family:
+        'IBM Plex Mono',
+        monospace;
+
+      font-size:
+        clamp(20px, 2.6vw, 42px);
+
+      text-align: center;
+
+      padding:
+        0 8vw;
+
+      line-height: 1.5;
+
+      letter-spacing: 0.03em;
+
+      text-shadow:
+        0 0 10px
+        rgba(138,109,44,0.18);
+    }
+
+    #redirectCursor {
+
+      animation:
+        cursorPulse 0.8s infinite;
+    }
+
+    @keyframes cursorPulse {
+
+      0% {
+
+        opacity: 1;
+      }
+
+      50% {
+
+        opacity: 0;
+      }
+
+      100% {
+
+        opacity: 1;
+      }
+    }
 
   </style>
 </head>
@@ -559,6 +639,12 @@
   <div id="statusMessage"></div>
  
   <div id="fadeOverlay"></div>
+
+  <div id="redirectScreen">
+
+    <div id="redirectText"></div>
+
+  </div>
 
   <!-- SCENE -->
 
@@ -688,7 +774,7 @@
         width="0.75"
         height="1.132"
 
-        position="0 0.3 0"
+        position="0 0 0"
 
         visible="false">
       </a-video>
