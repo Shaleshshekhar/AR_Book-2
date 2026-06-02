@@ -52,6 +52,16 @@ window.addEventListener(
         '#startButton'
       )
 
+    const buttonText =
+      document.querySelector(
+        '#buttonText'
+      )
+
+    const loadingDots =
+      document.querySelector(
+        '#loadingDots'
+      )
+
     console.log(
       'SPLASH REFERENCES:',
       splashScreen,
@@ -83,10 +93,20 @@ window.addEventListener(
 
         APP.started = true
 
-        startButton.innerText =
-          'LOADING...'
+        // ====================================
+        // BUTTON STATE
+        // ====================================
 
         startButton.disabled = true
+
+        startButton.style.opacity =
+          '0.7'
+
+        buttonText.innerText =
+          'STARTING'
+
+        loadingDots.style.display =
+          'inline-block'
 
         // ====================================
         // AUDIO UNLOCK

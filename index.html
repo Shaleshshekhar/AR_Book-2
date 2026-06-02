@@ -531,43 +531,54 @@
 
   <!-- SPLASH -->
 
-  <div id="splashContent">
+  <div id="splashScreen">
 
-    <div id="topSpacer"></div>
+    <img
+      id="splashBg"
+      src="./assets/splash_bg.jpg">
 
-    <div id="brandingBlock">
+    <div id="splashOverlay"></div>
 
-      <img
-        id="titleImage"
-        src="./assets/title.png"
-        alt="The Ghost City">
+    <div id="splashContent">
 
-      <div id="subTitle">
-        CLASSIFIED ARCHIVE ACCESS
+      <div id="topSpacer"></div>
+
+      <div id="brandingBlock">
+
+        <img
+          id="titleImage"
+          src="./assets/title.png"
+          alt="The Ghost City">
+
+        <div id="subTitle">
+          CLASSIFIED ARCHIVE ACCESS
+        </div>
+
       </div>
+
+      <div id="middleSpacer"></div>
+
+      <button
+        id="startButton"
+        disabled>
+
+        <span id="buttonText">
+          LOADING
+        </span>
+
+        <span id="loadingDots">
+          ...
+        </span>
+
+      </button>
+
+      <div id="bottomSpacer"></div>
 
     </div>
 
-    <div id="middleSpacer"></div>
-
-      
-    <button
-      id="startButton"
-      disabled>
-
-      <span id="buttonText">
-        LOADING
-      </span>
-
-      <span id="loadingDots">
-        ...
-      </span>
-
-    </button>
-
-    <div id="bottomSpacer"></div>
-
   </div>
+
+
 
   <!-- STATUS MESSAGE -->
 
