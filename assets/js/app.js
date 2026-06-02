@@ -61,6 +61,45 @@ window.addEventListener(
       document.querySelector(
         '#loadingDots'
       )
+      
+    // ====================================
+    // LOADING DOTS ANIMATION
+    // ====================================
+
+    let dots = ''
+
+    const loadingInterval =
+      setInterval(() => {
+
+        if (
+          !startButton.disabled
+        ) {
+
+          clearInterval(
+            loadingInterval
+          )
+
+          loadingDots.innerText =
+            ''
+
+          return
+        }
+
+        if (
+          dots.length >= 3
+        ) {
+
+          dots = ''
+
+        } else {
+
+          dots += '.'
+        }
+
+        loadingDots.innerText =
+          dots
+
+      }, 420)
 
     console.log(
       'SPLASH REFERENCES:',
