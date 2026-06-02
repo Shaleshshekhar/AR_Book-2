@@ -115,7 +115,7 @@
     }
 
     /* =========================================
-       SPLASH SCREEN
+      SPLASH SCREEN
     ========================================= */
 
     #splashScreen {
@@ -130,11 +130,24 @@
 
       z-index: 999999;
 
-      background: #000;
+      background: black;
 
       display: flex;
       justify-content: center;
       align-items: center;
+
+      opacity: 0;
+
+      animation:
+        splashFadeIn 0.9s ease forwards;
+    }
+
+    @keyframes splashFadeIn {
+
+      to {
+
+        opacity: 1;
+      }
     }
 
     #splashBg {
@@ -146,6 +159,8 @@
       height: 100%;
 
       object-fit: cover;
+
+      transform: scale(1.02);
     }
 
     #splashOverlay {
@@ -154,10 +169,11 @@
       inset: 0;
 
       background:
+
         linear-gradient(
           to bottom,
-          rgba(0,0,0,0.25),
-          rgba(0,0,0,0.55)
+          rgba(0,0,0,0.15),
+          rgba(0,0,0,0.45)
         );
     }
 
@@ -172,88 +188,177 @@
 
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       align-items: center;
 
-      padding:
-        90px 32px 60px;
+      text-align: center;
 
       box-sizing: border-box;
 
-      text-align: center;
+      padding:
+        0 28px;
     }
 
-    #titleWrapper {
+    /* =========================================
+      SPACERS
+    ========================================= */
 
-      margin-top: 120px;
+    #topSpacer {
+
+      flex: 1.4;
     }
 
-    #mainTitle {
+    #middleSpacer {
 
-      margin: 0;
+      flex: 1;
+    }
 
-      color: white;
+    #bottomSpacer {
 
-      font-size:
-        clamp(48px, 9vw, 88px);
+      flex: 0.65;
+    }
 
-      font-weight: 800;
+    /* =========================================
+      BRANDING
+    ========================================= */
 
-      letter-spacing: 0.08em;
+    #brandingBlock {
 
-      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-      line-height: 0.95;
+      opacity: 0;
+
+      transform:
+        translateY(18px);
+
+      animation:
+        brandingReveal 0.9s ease forwards;
+
+      animation-delay: 0.35s;
+    }
+
+    @keyframes brandingReveal {
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+    #titleImage {
+
+      height: 34vh;
+
+      width: auto;
+
+      max-width: 82vw;
+
+      object-fit: contain;
+
+      filter:
+        drop-shadow(
+          0 0 14px
+          rgba(255,220,150,0.18)
+        );
     }
 
     #subTitle {
 
-      margin-top: 18px;
+      margin-top: 1.2vh;
 
       color:
-        rgba(220,235,255,0.82);
+        #b09e75;
 
       font-size:
-        clamp(18px, 3vw, 32px);
+        clamp(12px, 1.8vh, 18px);
 
-      letter-spacing: 0.18em;
+      letter-spacing: 0.22em;
 
-      font-weight: 300;
+      font-weight: 500;
 
       text-transform: uppercase;
+
+      opacity: 0.95;
     }
+
+    /* =========================================
+      BUTTON
+    ========================================= */
 
     #startButton {
 
-      margin-bottom: 20px;
-
-      width: min(82vw, 420px);
-
-      height: 74px;
-
-      border-radius: 18px;
-
       border:
         1.5px solid
-        rgba(190,230,255,0.7);
+        rgba(176,158,117,0.9);
 
       background:
-        linear-gradient(
-          to bottom,
-          rgba(255,255,255,0.18),
-          rgba(120,170,220,0.12)
-        );
+        transparent;
 
-      color: white;
+      color:
+        #b09e75;
 
-      font-size: 30px;
+      padding:
+        18px 42px;
 
-      font-weight: 300;
+      border-radius: 10px;
 
-      letter-spacing: 0.08em;
+      font-size:
+        clamp(16px, 2.1vh, 22px);
+
+      letter-spacing: 0.12em;
+
+      text-transform: uppercase;
 
       cursor: pointer;
+
+      opacity: 0;
+
+      transform:
+        translateY(18px);
+
+      animation:
+        ctaReveal 0.8s ease forwards;
+
+      animation-delay: 0.75s;
+
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+
+      box-shadow:
+        0 0 12px
+        rgba(176,158,117,0.12);
     }
+
+    @keyframes ctaReveal {
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+    #startButton:active {
+
+      transform:
+        scale(0.97);
+
+      background:
+        rgba(176,158,117,0.08);
+
+      box-shadow:
+        0 0 18px
+        rgba(176,158,117,0.22);
+    }
+
 
     /* =========================================
        STATUS UI
@@ -369,35 +474,32 @@
 
   <!-- SPLASH -->
 
-  <div id="splashScreen">
+  <div id="splashContent">
 
-    <img
-      id="splashBg"
-      src="./assets/splash_bg.jpg">
+    <div id="topSpacer"></div>
 
-    <div id="splashOverlay"></div>
+    <div id="brandingBlock">
 
-    <div id="splashContent">
+      <img
+        id="titleImage"
+        src="./assets/title.png"
+        alt="The Ghost City">
 
-      <div id="titleWrapper">
-
-        <h1 id="mainTitle">
-          THE GHOST CITY
-        </h1>
-
-        <p id="subTitle">
-          Classified Archive Access
-        </p>
-
+      <div id="subTitle">
+        CLASSIFIED ARCHIVE ACCESS
       </div>
 
-      <button id="startButton">
-
-        Start Experience
-
-      </button>
-
     </div>
+
+    <div id="middleSpacer"></div>
+
+    <button id="startButton">
+
+      START EXPERIENCE
+
+    </button>
+
+    <div id="bottomSpacer"></div>
 
   </div>
 
@@ -521,7 +623,7 @@
 
         rotation="0 -90 0"
 
-        scale="1.15 1.15 1.15"
+        scale="1.25 1.25 1.25"
 
         visible="false">
       </a-entity>
