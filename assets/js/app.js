@@ -20,6 +20,14 @@ function startApp() {
   )
 
   // ====================================
+  // SHOW SPLASH
+  // ====================================
+
+  document.querySelector(
+    '#splashScreen'
+  ).style.display = 'flex'
+
+  // ====================================
   // INIT MANAGERS
   // ====================================
 
@@ -175,16 +183,20 @@ function checkCompatibility() {
   // UNSUPPORTED DEVICE
   // ====================================
 
-  if (!compatible) {
+ if (!compatible) {
 
-    console.log(
-      'UNSUPPORTED DEVICE'
-    )
+  console.log(
+    'UNSUPPORTED DEVICE'
+  )
+
+  setTimeout(() => {
 
     document.querySelector(
       '#fallbackScreen'
     ).style.display =
       'flex'
+
+  }, 1000)
 
     document.querySelector(
       '#splashScreen'
