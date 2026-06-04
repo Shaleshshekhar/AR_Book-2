@@ -105,6 +105,8 @@
       animation:
         brandingReveal
         0.8s ease forwards;
+
+      pointer-events:none;  
     }
 
     #entryTitle {
@@ -266,25 +268,6 @@
       box-sizing: border-box;
     }
 
-    #fallbackTitle {
-
-      height: 34vh;
-
-      width: auto;
-
-      max-width: 82vw;
-
-      object-fit: contain;
-
-      margin-top: 10vh;
-
-      filter:
-        drop-shadow(
-          0 0 14px
-          rgba(255,220,150,0.18)
-        );
-    }
-
     #fallbackMessage {
 
       margin-top: 3vh;
@@ -359,33 +342,6 @@
       letter-spacing: 0.05em;
     }
 
-    #fallbackBg {
-
-      position: absolute;
-      inset: 0;
-
-      width: 100%;
-      height: 100%;
-
-      object-fit: cover;
-
-      transform: scale(1.02);
-    }
-
-    #fallbackOverlay {
-
-      position: absolute;
-      inset: 0;
-
-      background:
-
-        linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.15),
-          rgba(0,0,0,0.45)
-        );
-    }
-
     #fallbackScreen {
 
       position: fixed;
@@ -403,7 +359,6 @@
       align-items: center;
     }
 
-    #fallbackTitle,
     #fallbackMessage,
     #fallbackQR,
     #fallbackPrompt,
@@ -417,11 +372,6 @@
       animation:
         fallbackReveal
         0.8s ease forwards;
-    }
-
-    #fallbackTitle {
-
-      animation-delay: 0.15s;
     }
 
     #fallbackMessage {
@@ -478,33 +428,6 @@
       align-items: center;
     }
 
-    #splashBg {
-
-      position: absolute;
-      inset: 0;
-
-      width: 100%;
-      height: 100%;
-
-      object-fit: cover;
-
-      transform: scale(1.02);
-    }
-
-    #splashOverlay {
-
-      position: absolute;
-      inset: 0;
-
-      background:
-
-        linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.15),
-          rgba(0,0,0,0.45)
-        );
-    }
-
     #splashContent {
 
       position: relative;
@@ -524,93 +447,6 @@
 
       padding:
         0 28px;
-    }
-
-    /* =========================================
-      SPACERS
-    ========================================= */
-
-    #topSpacer {
-
-      flex: 1.4;
-    }
-
-    #middleSpacer {
-
-      flex: 1;
-    }
-
-    #bottomSpacer {
-
-      flex: 0.65;
-    }
-
-    /* =========================================
-      BRANDING
-    ========================================= */
-
-    #brandingBlock {
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      opacity: 0;
-
-      transform:
-        translateY(18px);
-
-      animation:
-        brandingReveal 0.9s ease forwards;
-
-      animation-delay: 0.35s;
-    }
-
-    @keyframes brandingReveal {
-
-      to {
-
-        opacity: 1;
-
-        transform:
-          translateY(0);
-      }
-    }
-
-    #titleImage {
-
-      height: 34vh;
-
-      width: auto;
-
-      max-width: 82vw;
-
-      object-fit: contain;
-
-      filter:
-        drop-shadow(
-          0 0 14px
-          rgba(255,220,150,0.18)
-        );
-    }
-
-    #subTitle {
-
-      margin-top: 1.2vh;
-
-      color:
-        #b09e75;
-
-      font-size:
-        clamp(12px, 1.8vh, 18px);
-
-      letter-spacing: 0.22em;
-
-      font-weight: 500;
-
-      text-transform: uppercase;
-
-      opacity: 0.95;
     }
 
     /* =========================================
@@ -787,42 +623,7 @@
 
       opacity: 1;
     }
- 
-    #debugPanel {
 
-      position: fixed;
-
-      left: 10px;
-      right: 10px;
-      bottom: 110px;
-
-      max-height: 220px;
-
-      overflow-y: auto;
-
-      z-index: 999999;
-
-      padding: 12px;
-
-      border-radius: 12px;
-
-      background:
-        rgba(0,0,0,0.72);
-
-      color:
-        #7CFFB2;
-
-      font-size: 12px;
-
-      font-family:
-        monospace;
-
-      line-height: 1.45;
-
-      pointer-events: none;
-
-      white-space: pre-wrap;
-    }
     
     /* =========================================
       REDIRECT SCREEN
@@ -978,24 +779,20 @@
       id="entryBg"
       src="./assets/splash_bg.jpg">
 
-  <div id="topSpacer"></div>
-
-        <div id="brandingBlock">
+        <div id="entryBranding">
 
           <img
-            id="titleImage"
+            id="entryTitle"
             src="./assets/title.png"
             alt="The Ghost City">
 
-          <div id="subTitle">
+          <div id="entrySubtitle">
             CLASSIFIED ARCHIVE ACCESS
           </div>
 
         </div>
 
   </div>
-
-  <div id="statusMessage"></div>
 
   <!-- FALLBACK SCREEN -->
 
@@ -1040,8 +837,6 @@
 
     <div id="splashContent">
 
-      <div id="middleSpacer"></div>
-
       <button
         id="startButton"
         disabled>
@@ -1067,8 +862,6 @@
       </a>
 
     </div>
-
-      <div id="bottomSpacer"></div>
 
     </div>
 
