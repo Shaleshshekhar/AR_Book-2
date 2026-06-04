@@ -149,77 +149,32 @@ function startApp() {
 
 function checkCompatibility() {
 
-  if (
-
-    !window.XR8 ||
-
-    !XR8.XrDevice ||
-
-    !XR8.XrDevice.isDeviceBrowserCompatible
-
-  ) {
-
-    console.log(
-      'WAITING FOR XR8...'
-    )
-
-    setTimeout(
-      checkCompatibility,
-      250
-    )
-
-    return
-  }
-
   const compatible =
-    XR8.XrDevice.isDeviceBrowserCompatible()
+    XR8.isDeviceBrowserSupported()
 
   console.log(
     'COMPATIBLE:',
     compatible
   )
 
-  // ====================================
-  // UNSUPPORTED DEVICE
-  // ====================================
+  if (!compatible) {
 
- if (!compatible) {
-
-  console.log(
-    'UNSUPPORTED DEVICE'
-  )
-
-  setTimeout(() => {
+    console.log(
+      'UNSUPPORTED DEVICE'
+    )
 
     document.querySelector(
       '#fallbackScreen'
     ).style.display =
       'flex'
 
-  }, 1000)
-
     document.querySelector(
-      '#splashScreen'
+      'a-scene'
     ).style.display =
       'none'
 
-    const scene =
-      document.querySelector(
-        'a-scene'
-      )
-
-    if (scene) {
-
-      scene.style.display =
-        'none'
-    }
-
     return
   }
-
-  // ====================================
-  // SUPPORTED DEVICE
-  // ====================================
 
   startApp()
 }
