@@ -133,8 +133,23 @@ function startApp() {
 
       await AudioManager.unlock()
 
-      splashScreen.style.display =
-        'none'
+      document.querySelector(
+        '#splashScreen'
+      ).style.display = 'none'
+
+      document.querySelector(
+        '#entryBackground'
+      ).classList.add(
+          'hidden'
+      )
+      
+      setTimeout(() => {
+
+        document.querySelector(
+          '#entryBackground'
+        ).style.display = 'none'
+
+      }, 500)
 
       UIManager.showMessage(
         'Scan the book'

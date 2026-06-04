@@ -771,6 +771,19 @@
       box-sizing:border-box;
     }
 
+    #entryBackground {
+
+      transition:
+        opacity 0.5s ease;
+    }
+
+    #entryBackground.hidden {
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+    
   </style>
 </head>
 
