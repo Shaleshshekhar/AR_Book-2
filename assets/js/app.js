@@ -22,6 +22,51 @@ window.addEventListener(
     console.log(
       'WINDOW LOADED'
     )
+    
+    // ====================================
+    // UNSUPPORTED DEVICE
+    // ====================================
+
+    if (
+
+      window.XR8 &&
+      XR8.XrDevice &&
+      !XR8.XrDevice.isDeviceBrowserCompatible()
+
+    ) {
+
+      console.log(
+        'UNSUPPORTED DEVICE'
+      )
+
+      document.querySelector(
+        '#fallbackScreen'
+      ).style.display = 'flex'
+
+      const splash =
+        document.querySelector(
+          '#splashScreen'
+        )
+
+      if (splash) {
+
+        splash.style.display =
+          'none'
+      }
+
+      const scene =
+        document.querySelector(
+          'a-scene'
+        )
+
+      if (scene) {
+
+        scene.style.display =
+          'none'
+      }
+
+      return
+    }
 
     // ====================================
     // INIT MANAGERS
