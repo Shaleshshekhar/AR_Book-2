@@ -132,11 +132,21 @@
 
     #entryTitle {
 
-      height: 24vh;
+      height: 34vh;
 
       width: auto;
 
       max-width: 80vw;
+
+      transition:
+        height 0.8s cubic-bezier(
+          .22,.61,.36,1
+        );
+    }
+
+    #entryBranding.compact #entryTitle {
+
+      height: 22vh;
     }
 
     #entrySubtitle {
@@ -152,7 +162,19 @@
       letter-spacing: 0.18em;
 
       font-size:
-        clamp(12px, 1.8vh, 18px);
+        clamp(14px, 2vh, 20px);
+
+      transition:
+        font-size 0.8s cubic-bezier(
+          .22,.61,.36,1
+        );
+
+    }
+
+    #entryBranding.compact #entrySubtitle {
+
+      font-size:
+        clamp(12px, 1.6vh, 16px);
     }
 
     @keyframes brandingReveal {
