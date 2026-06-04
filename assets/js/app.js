@@ -149,19 +149,28 @@ function startApp() {
 
 function checkCompatibility() {
 
-  const compatible =
-    XR8.isDeviceBrowserSupported()
+  if (
 
-  console.log(
-    'COMPATIBLE:',
-    compatible
-  )
+    !window.XR8 ||
+
+    !XR8.XrDevice ||
+
+    !XR8.XrDevice.isDeviceBrowserCompatible
+
+  ) {
+
+    setTimeout(
+      checkCompatibility,
+      250
+    )
+
+    return
+  }
+
+  const compatible =
+    XR8.XrDevice.isDeviceBrowserCompatible()
 
   if (!compatible) {
-
-    console.log(
-      'UNSUPPORTED DEVICE'
-    )
 
     document.querySelector(
       '#fallbackScreen'
