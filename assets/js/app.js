@@ -142,7 +142,7 @@ function startApp() {
       ).classList.add(
           'hidden'
       )
-      
+
       setTimeout(() => {
 
         document.querySelector(
@@ -191,6 +191,21 @@ function checkCompatibility() {
       '#fallbackScreen'
     ).style.display =
       'flex'
+
+    requestAnimationFrame(() => {
+
+      document.querySelector(
+        '#entryBranding'
+      ).classList.add(
+        'compact'
+      )
+
+      document.querySelector(
+        '#fallbackContent'
+      ).classList.add(
+        'expanded'
+      )
+    })
 
     document.querySelector(
       'a-scene'

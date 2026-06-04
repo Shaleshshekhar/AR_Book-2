@@ -89,7 +89,8 @@
       left: 0;
 
       width: 100%;
-      height: 50vh;
+
+      height: 75vh;
 
       display: flex;
 
@@ -97,9 +98,11 @@
 
       justify-content: flex-end;
 
-      padding-bottom:8vh;
-
       align-items: center;
+
+      padding-bottom: 8vh;
+
+      box-sizing: border-box;
 
       z-index: 999999;
 
@@ -111,7 +114,20 @@
         brandingReveal
         0.8s ease forwards;
 
-      pointer-events:none;  
+      transition:
+        height 0.8s cubic-bezier(
+          .22,.61,.36,1
+        ),
+        padding-bottom 0.8s cubic-bezier(
+          .22,.61,.36,1
+        );
+    }
+
+    #entryBranding.compact {
+
+      height: 50vh;
+
+      padding-bottom: 4vh;
     }
 
     #entryTitle {
@@ -266,7 +282,24 @@
 
       padding-bottom:10vh;
 
+      padding-top: 25vh;
+
+      opacity: 0;
+
+      transition:
+        padding-top 0.8s cubic-bezier(
+          .22,.61,.36,1
+        ),
+        opacity 0.8s ease;
+
       box-sizing:border-box;
+    }
+
+    #fallbackContent.expanded {
+
+      padding-top: 0;
+
+      opacity: 1;
     }
 
     #fallbackMessage {
@@ -783,7 +816,7 @@
 
       pointer-events: none;
     }
-    
+
   </style>
 </head>
 
