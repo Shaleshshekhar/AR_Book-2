@@ -764,7 +764,16 @@
 
     #creditText {
 
-      margin-top: 2.8vh;
+      position: fixed;
+
+      left: 50%;
+
+      bottom: 4vh;
+
+      transform:
+        translateX(-50%);
+
+      z-index: 999999;
 
       color:
         rgba(176,158,117,0.42);
@@ -852,19 +861,30 @@
       id="entryBg"
       src="./assets/splash_bg.jpg">
 
-        <div id="entryBranding">
+      <div id="entryBranding">
 
-          <img
-            id="entryTitle"
-            src="./assets/title.png"
-            alt="The Ghost City">
+        <img
+          id="entryTitle"
+          src="./assets/title.png"
+          alt="The Ghost City">
 
-          <div id="entrySubtitle">
-            CLASSIFIED ARCHIVE ACCESS
-          </div>
-
+        <div id="entrySubtitle">
+          CLASSIFIED ARCHIVE ACCESS
         </div>
 
+      </div>
+
+      <div id="creditText">
+
+        created by - 
+        <a
+          href="https://shaleshshekhar.in"
+          target="_blank"
+          rel="noopener noreferrer">
+          Shalesh Shekhar
+        </a>
+
+</div>
   </div>
 
   <!-- FALLBACK SCREEN -->
@@ -923,18 +943,6 @@
         </span>
 
       </button>
-      
-    <div id="creditText">
-
-      created by - 
-      <a
-        href="https://shaleshshekhar.in"
-        target="_blank"
-        rel="noopener noreferrer">
-        Shalesh Shekhar
-      </a>
-
-    </div>
 
     </div>
 
