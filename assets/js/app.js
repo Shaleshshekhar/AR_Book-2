@@ -43,6 +43,126 @@ function startApp() {
   )
 
   // ====================================
+  // PRELOAD EXPERIENCE ASSETS
+  // ====================================
+
+  const startButton =
+    document.querySelector(
+      '#startButton'
+    )
+
+  const buttonText =
+    document.querySelector(
+      '#buttonText'
+    )
+
+  const loadingDots =
+    document.querySelector(
+      '#loadingDots'
+    )
+
+  const introVideo =
+    document.querySelector(
+      '#introVideo'
+    )
+
+  const outroVideo =
+    document.querySelector(
+      '#outroVideo'
+    )
+
+  const lockerModel =
+    document.querySelector(
+      '#lockerModel'
+    )
+
+  console.log(
+    'STARTING ASSET PRELOAD'
+  )
+
+  introVideo.src =
+    './assets/intro_video.mp4'
+
+  outroVideo.src =
+    './assets/outro_video.mp4'
+
+  lockerModel.setAttribute(
+    'gltf-model',
+    './assets/locker.glb'
+  )
+
+  introVideo.load()
+  outroVideo.load()
+  introVideo.addEventListener(
+  'loadeddata',
+  () => console.log(
+    'INTRO READY'
+  ),
+  { once:true }
+)
+
+outroVideo.addEventListener(
+  'loadeddata',
+  () => console.log(
+    'OUTRO READY'
+  ),
+  { once:true }
+)
+
+lockerModel.addEventListener(
+  'model-loaded',
+  () => console.log(
+    'MODEL READY'
+  ),
+  { once:true }
+)
+
+Promise.all([
+
+  new Promise(resolve => {
+
+    introVideo.addEventListener(
+      'loadeddata',
+      resolve,
+      { once:true }
+    )
+  }),
+
+  new Promise(resolve => {
+
+    outroVideo.addEventListener(
+      'loadeddata',
+      resolve,
+      { once:true }
+    )
+  }),
+
+  new Promise(resolve => {
+
+    lockerModel.addEventListener(
+      'model-loaded',
+      resolve,
+      { once:true }
+    )
+  })
+
+]).then(() => {
+
+  console.log(
+    'ALL ASSETS READY'
+  )
+
+  startButton.disabled =
+    false
+
+  buttonText.innerText =
+    'START EXPERIENCE'
+
+  loadingDots.innerText =
+    ''
+})
+
+  // ====================================
   // SPLASH REFERENCES
   // ====================================
 
