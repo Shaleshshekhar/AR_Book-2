@@ -190,29 +190,34 @@ function checkCompatibility() {
 
   if (!compatible) {
 
-      const fallback =
-        document.querySelector(
-          '#fallbackScreen'
-        )
+    document.querySelector(
+      '#splashScreen'
+    ).style.display =
+      'none'
 
-      fallback.style.display =
-        'flex'
-
-      requestAnimationFrame(() => {
-
-        fallback.classList.add(
-          'animate'
-        )
-
-      })
-
+    const fallback =
       document.querySelector(
-        'a-scene'
-      ).style.display =
-        'none'
+        '#fallbackScreen'
+      )
 
-      return
-    }
+    fallback.style.display =
+      'flex'
+
+    setTimeout(() => {
+
+      fallback.classList.add(
+        'animate'
+      )
+
+    }, 250)
+
+    document.querySelector(
+      'a-scene'
+    ).style.display =
+      'none'
+
+    return
+  }
 
       startApp()
     }

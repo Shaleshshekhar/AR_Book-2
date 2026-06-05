@@ -245,8 +245,23 @@
         );
     }
 
-    #fallbackScreen.animate {
+    @keyframes fallbackBrandingIn {
 
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(12px);
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
     }
 
     #fallbackScreen.animate #fallbackTitle {
@@ -263,42 +278,6 @@
     /* =========================================
       FALLBACK SCREEN
     ========================================= */
-   #fallbackContent {
-
-      width:100%;
-      height:100%;
-
-      display:flex;
-
-      flex-direction:column;
-
-      justify-content:flex-end;
-
-      align-items:center;
-
-      text-align:center;
-
-      padding-bottom:10vh;
-
-      padding-top: 25vh;
-
-      opacity: 0;
-
-      transition:
-        padding-top 0.8s cubic-bezier(
-          .22,.61,.36,1
-        ),
-        opacity 0.8s ease;
-
-      box-sizing:border-box;
-    }
-
-    #fallbackContent.expanded {
-
-      padding-top: 0;
-
-      opacity: 1;
-    }
 
     #fallbackMessage {
 
@@ -469,7 +448,7 @@
 
       flex-direction:column;
 
-      justify-content:flex-end;
+      justify-content:initial;
 
       align-items:center;
 
@@ -527,7 +506,98 @@
         0 0 12px
         rgba(176,158,117,0.12);
     }
-        
+
+        #fallbackContent {
+
+      width:100%;
+      height:100%;
+
+      display:flex;
+
+      flex-direction:column;
+
+      align-items:center;
+
+      text-align:center;
+
+      box-sizing:border-box;
+    }
+
+    #fallbackTopSpacer {
+
+      flex: 1.4;
+
+      transition:
+        flex 0.8s cubic-bezier(
+          .22,.61,.36,1
+        );
+    }
+
+    #fallbackBottom {
+
+      flex: 0.6;
+
+      display:flex;
+
+      flex-direction:column;
+
+      align-items:center;
+
+      justify-content:flex-start;
+
+      transition:
+        flex 0.8s cubic-bezier(
+          .22,.61,.36,1
+        );
+    }
+
+    #fallbackScreen.animate #fallbackTopSpacer {
+
+      flex: 0.9;
+    }
+
+    #fallbackScreen.animate #fallbackBottom {
+
+      flex: 1.1;
+    }
+
+    #topSpacer {
+
+      flex: 1.4;
+    }
+
+    #middleSpacer {
+
+      flex: 1;
+    }
+
+    #bottomSpacer {
+
+      flex: 0.65;
+    }
+
+    #fallbackBg {
+
+      position: absolute;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+
+    #fallbackOverlay {
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        rgba(0,0,0,0.22);
+    }
+
     /* =========================================
       BUTTON LOADING
     ========================================= */
@@ -806,6 +876,34 @@
       }
     }
 
+    #fallbackCredit {
+
+      margin-top: auto;
+
+      margin-bottom: 4vh;
+
+      color:
+        rgba(176,158,117,0.42);
+
+      font-family:
+        'IBM Plex Mono',
+        monospace;
+
+      font-size:
+        clamp(10px,1.15vh,13px);
+
+      letter-spacing: 0.06em;
+
+      text-align: center;
+    }
+
+    #fallbackCredit a {
+
+      color:
+        rgba(176,158,117,0.62);
+
+      text-decoration: none;
+    }
   </style>
 </head>
 
