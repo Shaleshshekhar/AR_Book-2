@@ -237,6 +237,11 @@ Promise.all([
         'inline-block'
 
       await AudioManager.unlock()
+      
+      document.querySelector(
+        '#splashScreen'
+      ).style.display =
+        'none'
 
       UIManager.showMessage(
         'Scan the book'
