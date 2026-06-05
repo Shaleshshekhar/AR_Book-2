@@ -67,6 +67,15 @@ function startApp() {
     )
 
   // ====================================
+  // ENABLE CTA
+  // ====================================
+
+  startButton.disabled = false
+
+  buttonText.innerText =
+  'START EXPERIENCE'
+
+  // ====================================
   // LOADING DOTS
   // ====================================
 
