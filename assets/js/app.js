@@ -67,15 +67,6 @@ function startApp() {
     )
 
   // ====================================
-  // ENABLE CTA
-  // ====================================
-
-  startButton.disabled = false
-
-  buttonText.innerText =
-  'START EXPERIENCE'
-
-  // ====================================
   // LOADING DOTS
   // ====================================
 
@@ -141,27 +132,6 @@ function startApp() {
         'inline-block'
 
       await AudioManager.unlock()
-
-      document.querySelector(
-        '#introVideo'
-      ).src =
-        './assets/intro_video.mp4'
-
-      document.querySelector(
-        '#outroVideo'
-      ).src =
-        './assets/outro_video.mp4'
-
-      document.querySelector(
-        '#lockerModel'
-      ).setAttribute(
-        'gltf-model',
-        './assets/locker.glb'
-      )
-
-      document.querySelector(
-        '#splashScreen'
-      ).style.display = 'none'
 
       UIManager.showMessage(
         'Scan the book'

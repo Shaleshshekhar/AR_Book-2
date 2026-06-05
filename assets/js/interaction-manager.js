@@ -44,6 +44,36 @@ window.InteractionManager = {
         )
 
         // ====================================
+        // PRELOAD EXPERIENCE ASSETS
+        // ====================================
+
+        const introVideo =
+          document.querySelector(
+            '#introVideo'
+          )
+
+        const outroVideo =
+          document.querySelector(
+            '#outroVideo'
+          )
+
+        const lockerModel =
+          document.querySelector(
+            '#lockerModel'
+          )
+
+        introVideo.src =
+          './assets/intro_video.mp4'
+
+        outroVideo.src =
+          './assets/outro_video.mp4'
+
+        lockerModel.setAttribute(
+          'gltf-model',
+          './assets/locker.glb'
+        )
+
+        // ====================================
         // ENABLE SPLASH CTA
         // ====================================
 
@@ -68,6 +98,41 @@ window.InteractionManager = {
           loadingDots
         ) {
 
+          Promise.all([
+
+          new Promise(resolve => {
+
+            introVideo.addEventListener(
+              'loadeddata',
+              resolve,
+              { once:true }
+            )
+          }),
+
+          new Promise(resolve => {
+
+            outroVideo.addEventListener(
+              'loadeddata',
+              resolve,
+              { once:true }
+            )
+          }),
+
+          new Promise(resolve => {
+
+            lockerModel.addEventListener(
+              'model-loaded',
+              resolve,
+              { once:true }
+            )
+          })
+
+        ]).then(() => {
+
+          console.log(
+            'ALL ASSETS READY'
+          )
+
           button.disabled = false
 
           buttonText.innerText =
@@ -75,6 +140,7 @@ window.InteractionManager = {
 
           loadingDots.style.display =
             'none'
+        })
         }
 
         canvas.addEventListener(
