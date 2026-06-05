@@ -134,22 +134,25 @@ function startApp() {
       await AudioManager.unlock()
 
       document.querySelector(
-        '#splashScreen'
-      ).style.display = 'none'
+        '#introVideo'
+      ).src =
+        './assets/intro_video.mp4'
 
       document.querySelector(
-        '#entryBackground'
-      ).classList.add(
-          'hidden'
+        '#outroVideo'
+      ).src =
+        './assets/outro_video.mp4'
+
+      document.querySelector(
+        '#lockerModel'
+      ).setAttribute(
+        'gltf-model',
+        './assets/locker.glb'
       )
 
-      setTimeout(() => {
-
-        document.querySelector(
-          '#entryBackground'
-        ).style.display = 'none'
-
-      }, 500)
+      document.querySelector(
+        '#splashScreen'
+      ).style.display = 'none'
 
       UIManager.showMessage(
         'Scan the book'
@@ -187,36 +190,32 @@ function checkCompatibility() {
 
   if (!compatible) {
 
-    document.querySelector(
-      '#fallbackScreen'
-    ).style.display =
-      'flex'
+      const fallback =
+        document.querySelector(
+          '#fallbackScreen'
+        )
 
-    requestAnimationFrame(() => {
+      fallback.style.display =
+        'flex'
+
+      requestAnimationFrame(() => {
+
+        fallback.classList.add(
+          'animate'
+        )
+
+      })
 
       document.querySelector(
-        '#entryBranding'
-      ).classList.add(
-        'compact'
-      )
+        'a-scene'
+      ).style.display =
+        'none'
 
-      document.querySelector(
-        '#fallbackContent'
-      ).classList.add(
-        'expanded'
-      )
-    })
+      return
+    }
 
-    document.querySelector(
-      'a-scene'
-    ).style.display =
-      'none'
-
-    return
-  }
-
-  startApp()
-}
+      startApp()
+    }
 
 // ====================================
 // WINDOW LOAD
