@@ -185,42 +185,58 @@ function checkCompatibility() {
     return
   }
 
-  const compatible =
-    XR8.XrDevice.isDeviceBrowserCompatible()
+  try {
 
-  if (!compatible) {
+    const compatible =
+      XR8.XrDevice.isDeviceBrowserCompatible()
 
-    document.querySelector(
-      '#splashScreen'
-    ).style.display =
-      'none'
+    if (!compatible) {
 
-    const fallback =
       document.querySelector(
-        '#fallbackScreen'
-      )
+        '#splashScreen'
+      ).style.display =
+        'none'
 
-    fallback.style.display =
-      'flex'
+      const fallback =
+        document.querySelector(
+          '#fallbackScreen'
+        )
 
-    setTimeout(() => {
+      fallback.style.display =
+        'flex'
 
-      fallback.classList.add(
-        'animate'
-      )
+      setTimeout(() => {
 
-    }, 250)
+        fallback.classList.add(
+          'animate'
+        )
 
-    document.querySelector(
-      'a-scene'
-    ).style.display =
-      'none'
+      }, 250)
+
+      document.querySelector(
+        'a-scene'
+      ).style.display =
+        'none'
+
+      return
+    }
+
+    startApp()
+
+  } catch (e) {
+
+    console.log(
+      'XR not ready yet'
+    )
+
+    setTimeout(
+      checkCompatibility,
+      250
+    )
 
     return
   }
-
-      startApp()
-    }
+}
 
 // ====================================
 // WINDOW LOAD
