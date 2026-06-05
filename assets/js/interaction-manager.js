@@ -20,6 +20,8 @@ window.InteractionManager = {
 
     this.onTouchStart =
       this.onTouchStart.bind(this)
+      
+    window.addEventListener('touchstart', this.onTouchStart, { passive: false })
 
   },
 
