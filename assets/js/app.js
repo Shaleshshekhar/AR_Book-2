@@ -170,22 +170,7 @@ Promise.all([
     document.querySelector(
       '#splashScreen'
     )
-
-  const startButton =
-    document.querySelector(
-      '#startButton'
-    )
-
-  const buttonText =
-    document.querySelector(
-      '#buttonText'
-    )
-
-  const loadingDots =
-    document.querySelector(
-      '#loadingDots'
-    )
-
+    
   // ====================================
   // LOADING DOTS
   // ====================================
