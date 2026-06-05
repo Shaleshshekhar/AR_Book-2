@@ -21,6 +21,10 @@ window.InteractionManager = {
     this.onTouchStart =
       this.onTouchStart.bind(this)
 
+    console.log(
+      'REGISTERING RENDERSTART'
+    )
+
     this.scene.addEventListener(
 
       'renderstart',
