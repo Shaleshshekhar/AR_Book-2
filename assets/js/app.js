@@ -151,15 +151,16 @@ Promise.all([
   console.log(
     'ALL ASSETS READY'
   )
+  if (loadingInterval) {
+    clearInterval(loadingInterval)
+  }
 
-  startButton.disabled =
-    false
+  if (loadingDots) {
+    loadingDots.remove()
+  }
 
-  buttonText.innerText =
-    'START EXPERIENCE'
-
-  loadingDots.innerText =
-    ''
+  startButton.disabled = false
+  buttonText.innerText = 'START EXPERIENCE'
 })
 
   // ====================================
@@ -215,37 +216,31 @@ Promise.all([
   // ====================================
 
   startButton.addEventListener(
-
     'click',
-
     async () => {
 
-      if (APP.started)
-        return
-
+      if (APP.started) return
       APP.started = true
 
       startButton.disabled = true
-
-      startButton.style.opacity =
-        '0.7'
-
-      buttonText.innerText =
-        'STARTING'
-
-      loadingDots.style.display =
-        'inline-block'
+      startButton.style.opacity = '0.7'
+      
+      // Changes cleanly and centers perfectly because the dots are gone forever!
+      buttonText.innerText = 'STARTING' 
 
       await AudioManager.unlock()
       
-      document.querySelector(
-        '#splashScreen'
-      ).style.display =
-        'none'
+      document.querySelector('#splashScreen').style.display = 'none'
+      APP.phase = 'intro'
 
-      UIManager.showMessage(
-        'Scan the book'
-      )
+      if (APP.tracking) {
+        console.log('Book already in view! Activating video matrix smoothly.')
+        IntroManager.introStarted = true
+        IntroManager.introPlane.setAttribute('visible', true)
+        IntroManager.introVideo.play()
+      } else {
+        UIManager.showMessage('Scan the book')
+      }
     }
   )
 }

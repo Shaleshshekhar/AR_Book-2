@@ -169,47 +169,30 @@ window.IntroManager = {
             )
           },
 
-  // ====================================
+// ====================================
   // TARGET FOUND
   // ====================================
-
   onTargetFound() {
+    // If the user is still on the splash screen, don't play or show anything yet
+    if (APP.phase === 'splash') {
+      console.log('Target anchored by engine, holding playback until splash is cleared.')
+      return
+    }
 
-    // ====================================
-    // INTRO
-    // ====================================
-
-    if (
-      APP.phase === 'intro'
-    ) {
-
+    // Normal intro playback logic
+    if (APP.phase === 'intro') {
       this.introVideo.play()
     }
 
-    if (
-      !this.introStarted
-    ) {
-
+    if (!this.introStarted) {
       this.introStarted = true
-
       APP.phase = 'intro'
-
-      this.introPlane.setAttribute(
-        'visible',
-        true
-      )
-
+      this.introPlane.setAttribute('visible', true)
       this.introVideo.play()
     }
 
-    // ====================================
-    // OUTRO
-    // ====================================
-
-    if (
-      APP.phase === 'outro'
-    ) {
-
+    // Normal outro playback logic
+    if (APP.phase === 'outro') {
       this.outroVideo.play()
     }
   },
@@ -217,20 +200,14 @@ window.IntroManager = {
   // ====================================
   // TARGET LOST
   // ====================================
-
   onTargetLost() {
+    if (APP.phase === 'splash') return // Do nothing if we're still on splash
 
-    if (
-      APP.phase === 'intro'
-    ) {
-
+    if (APP.phase === 'intro') {
       this.introVideo.pause()
     }
 
-    if (
-      APP.phase === 'outro'
-    ) {
-
+    if (APP.phase === 'outro') {
       this.outroVideo.pause()
     }
   },

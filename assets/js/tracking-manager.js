@@ -1,54 +1,25 @@
 window.TrackingManager = {
-
   init() {
+    console.log('TrackingManager INIT')
+    const scene = document.querySelector('a-scene')
 
-    console.log(
-      'TrackingManager INIT'
-    )
+    scene.addEventListener('xrimagefound', () => {
+      console.log('TARGET FOUND')
+      APP.tracking = true
+      UIManager.hideMessage()
+      IntroManager.onTargetFound() // Always notify IntroManager
+    })
 
-    const scene =
-      document.querySelector(
-        'a-scene'
-      )
-
-    scene.addEventListener(
-
-      'xrimagefound',
-
-      () => {
-
-        console.log(
-          'TARGET FOUND'
-        )
-
-        APP.tracking = true
-
-        UIManager.hideMessage()
-
-        IntroManager.onTargetFound()
+    scene.addEventListener('xrimagelost', () => {
+      console.log('TARGET LOST')
+      APP.tracking = false
+      
+      if (APP.phase !== 'splash') {
+        UIManager.showMessage('Re-scan the book')
       }
-    )
-
-    scene.addEventListener(
-
-      'xrimagelost',
-
-      () => {
-
-        console.log(
-          'TARGET LOST'
-        )
-
-        APP.tracking = false
-
-        UIManager.showMessage(
-          'Re-scan the book'
-        )
-
-        IntroManager.onTargetLost()
-
-        InteractionManager.onTrackingLost()
-      }
-    )
+      
+      IntroManager.onTargetLost()
+      InteractionManager.onTrackingLost()
+    })
   }
 }
