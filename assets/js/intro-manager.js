@@ -104,9 +104,8 @@ window.IntroManager = {
             'visible'
           )
         }
-
         // ====================================
-        // REDIRECT TERMINAL
+        // TERMINAL SCREEN
         // ====================================
 
         setTimeout(() => {
@@ -126,7 +125,7 @@ window.IntroManager = {
           )
 
           const message =
-            "Redirecting to Ethan Cain's Personal Computer..."
+            'CONNECTION ESTABLISHED'
 
           let index = 0
 
@@ -155,10 +154,72 @@ window.IntroManager = {
 
                 setTimeout(() => {
 
-                  window.location.href =
-                    'https://www.ryanpote.com/memento-mori'
+                  redirectText.innerHTML = `
 
-                }, 1200)
+        CONNECTION ESTABLISHED
+
+        <br><br>
+
+        The recovered terminal is now available.
+
+        <br><br>
+
+        Access Ethan Cain's Personal Computer:
+
+        <br><br>
+
+        <a
+          href="https://www.ryanpote.com/memento-mori"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            color:#B09E75;
+            text-decoration:none;
+          "
+        >
+
+          www.ryanpote.com/memento-mori
+
+        </a>
+
+        <br><br><br>
+
+        <button
+          id="terminalButton"
+          style="
+            padding:14px 28px;
+            background:transparent;
+            border:1px solid #8A6D2C;
+            color:#B09E75;
+            cursor:pointer;
+            font-family:'IBM Plex Mono',monospace;
+            letter-spacing:0.08em;
+          "
+        >
+
+          OPEN TERMINAL
+
+        </button>
+        `
+
+                  document
+                    .querySelector(
+                      '#terminalButton'
+                    )
+                    .addEventListener(
+
+                      'click',
+
+                      () => {
+
+                        window.open(
+                          'https://www.ryanpote.com/memento-mori',
+                          '_blank'
+                        )
+                      }
+                    )
+
+                }, 600)
               }
 
             }, 32)
