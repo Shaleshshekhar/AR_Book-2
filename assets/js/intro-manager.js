@@ -171,17 +171,24 @@ window.IntroManager = {
           <br><br>
 
           <a
-          href="https://www.ryanpote.com/memento-mori"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="
-            color:#B09E75;
-            text-decoration:none;
-            letter-spacing:0.1em;
-          "
+            href="https://www.ryanpote.com/memento-mori"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="
+              display:inline-block;
+              margin-top:24px;
+              padding:14px 32px;
+              border:1px solid #8A6D2C;
+              border-radius:8px;
+              color:#B09E75;
+              text-decoration:none;
+              letter-spacing:0.12em;
+              text-transform:uppercase;
+              transition:all 0.2s ease;
+            "
           >
 
-          OPEN TERMINAL
+            OPEN TERMINAL
 
           </a>
           `
