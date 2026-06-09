@@ -124,51 +124,37 @@ window.IntroManager = {
             'visible'
           )
 
-          const message =
-            'CONNECTION ESTABLISHED'
+          const lines = [
 
-          let index = 0
+            'CONNECTION ESTABLISHED',
 
-          const typeInterval =
-            setInterval(() => {
+            '',
 
-              const visibleText =
-                message.slice(
-                  0,
-                  index
-                )
+            'The recovered terminal is now available.',
 
-              redirectText.innerHTML =
+            '',
 
-                `${visibleText}<span id="redirectCursor">|</span>`
+            "Access Ethan Cain's Personal Computer:"
 
-              index++
+          ]
 
-              if (
-                index > message.length
-              ) {
+          let lineIndex = 0
 
-                clearInterval(
-                  typeInterval
-                )
+          let charIndex = 0
 
-                setTimeout(() => {
+          let output = ''
 
-                  redirectText.innerHTML = `
+          const typeNextLine = () => {
 
-        CONNECTION ESTABLISHED
+            if (
+              lineIndex >= lines.length
+            ) {
 
-        <br><br>
+              output += `
 
-        The recovered terminal is now available.
+          <br><br>
 
-        <br><br>
-
-        Access Ethan Cain's Personal Computer:
-
-        <br><br>
-
-        <a
+          <a
           href="https://www.ryanpote.com/memento-mori"
           target="_blank"
           rel="noopener noreferrer"
@@ -176,56 +162,83 @@ window.IntroManager = {
             color:#B09E75;
             text-decoration:none;
           "
-        >
+          >
 
           www.ryanpote.com/memento-mori
 
-        </a>
+          </a>
 
-        <br><br><br>
+          <br><br>
 
-        <button
-          id="terminalButton"
+          <a
+          href="https://www.ryanpote.com/memento-mori"
+          target="_blank"
+          rel="noopener noreferrer"
           style="
-            padding:14px 28px;
-            background:transparent;
-            border:1px solid #8A6D2C;
             color:#B09E75;
-            cursor:pointer;
-            font-family:'IBM Plex Mono',monospace;
-            letter-spacing:0.08em;
+            text-decoration:none;
+            letter-spacing:0.1em;
           "
-        >
+          >
 
           OPEN TERMINAL
 
-        </button>
-        `
+          </a>
+          `
 
-                  document
-                    .querySelector(
-                      '#terminalButton'
-                    )
-                    .addEventListener(
+              redirectText.innerHTML =
+                output
 
-                      'click',
+              return
+            }
 
-                      () => {
+            const line =
+              lines[lineIndex]
 
-                        window.open(
-                          'https://www.ryanpote.com/memento-mori',
-                          '_blank'
-                        )
-                      }
-                    )
+            charIndex = 0
 
-                }, 600)
-              }
+            const interval =
+              setInterval(() => {
 
-            }, 32)
+                const visibleLine =
+                  line.slice(
+                    0,
+                    charIndex
+                  )
+
+                redirectText.innerHTML =
+
+                  output +
+                  visibleLine +
+                  '<span id="redirectCursor">|</span>'
+
+                charIndex++
+
+                if (
+                  charIndex > line.length
+                ) {
+
+                  clearInterval(
+                    interval
+                  )
+
+                  output +=
+                    line + '<br>'
+
+                  lineIndex++
+
+                  setTimeout(
+                    typeNextLine,
+                    350
+                  )
+                }
+
+              }, 32)
+          }
+
+          typeNextLine()
 
         }, 850)
-
               }
             )
           },
